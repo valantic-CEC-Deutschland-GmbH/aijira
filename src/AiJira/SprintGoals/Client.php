@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AiJira;
+namespace AiJira\SprintGoals;
 
 class Client
 {

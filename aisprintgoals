@@ -11,7 +11,7 @@ function generateSprintGoals()
         exit(0);
     }
 
-    $client = new \AiJira\Client();
+    $client = new \AiJira\SprintGoals\Client();
     $formatter = new \AiJira\SprintGoals\Formatter();
 
     $ticketData = $client->getTicketData($sprintName);
