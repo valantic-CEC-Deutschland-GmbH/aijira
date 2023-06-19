@@ -1,0 +1,12 @@
+---
+extends: default
+
+ignore: |
+  vendor/
+
+rules:
+  line-length: disable
+  empty-lines: disable
+  document-start:
+    level: warning
+  truthy: disable

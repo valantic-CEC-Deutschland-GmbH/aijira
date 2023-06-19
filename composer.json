@@ -1,0 +1,22 @@
+{
+    "name": "valantic/aijira",
+    "description": "Gets all tickets from current or planned sprint and generates sprint goals using OpenAI",
+    "type": "library",
+    "license": "MIT",
+    "bin": [
+      "aisprintgoals"
+    ],
+    "authors": [
+        {
+            "name": "Dominik Bähr",
+            "email": "dominik.baehr@cec.valantic.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}

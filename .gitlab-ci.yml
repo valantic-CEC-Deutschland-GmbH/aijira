@@ -1,0 +1,41 @@
+image: registry.gitlab.nxs360.com/docker/php:8.1-cli
+
+stages:
+  - release
+  - deploy
+
+# https://gitlab.nxs360.com/help/user/packages/composer_repository/index#publish-a-composer-package-by-using-cicd
+deploy:composer:
+  stage: deploy
+  script:
+    - version=$([[ -z "$CI_COMMIT_TAG" ]] && echo "branch=$CI_COMMIT_REF_NAME" || echo "tag=$CI_COMMIT_TAG")
+    - response=$(curl -s -w "\n%{http_code}" $insecure --data $version $URL)
+    - code=$(echo "$response" | tail -n 1)
+    - body=$(echo "$response" | head -n 1)
+    # Output state information
+    - |
+      if [ $code -eq 201 ]; then
+        echo "Package created - Code $code - $body";
+      else
+        echo "Could not create package - Code $code - $body";
+        exit 1
+      fi
+  variables:
+    URL: "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/packages/composer?job_token=$CI_JOB_TOKEN"
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $CI_COMMIT_TAG =~ /^?[0-9]+[.][0-9]+([.][0-9]+)?$/
+
+
+# https://docs.gitlab.com/ee/user/project/releases/release_cicd_examples.html#create-a-release-when-a-git-tag-is-created
+release_job:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG                 # Run this job when a tag is created
+  script:
+    - echo "running release_job"
+  release:                               # See https://docs.gitlab.com/ee/ci/yaml/#release for available properties
+    tag_name: '$CI_COMMIT_TAG'
+    description: '$CI_COMMIT_TAG'
