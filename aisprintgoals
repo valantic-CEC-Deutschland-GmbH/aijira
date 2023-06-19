@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 
 function callApi(string $endpoint, array $headers, array $data): ?array
@@ -55,7 +56,7 @@ function getGeneratedSprintGoals(string $ticketData, bool $splitByLabels = true)
     return str_replace(['"', "\n"], '', $message);
 }
 
-function getTicketData(): array
+function getTicketData(string $sprintName): array
 {
     $email = getenv('AI_JIRA_EMAIL');
     $jiraApiToken = getenv('AI_JIRA_API_TOKEN');
@@ -71,7 +72,7 @@ function getTicketData(): array
     ];
 
     $data = [
-        'jql' => getenv('AI_JIRA_JQL'),
+        'jql' => sprintf('project = SPRY and Sprint = "%s" and (Sprint in futureSprints() or Sprint in openSprints()) and type not in (Epic) order by created DESC', $sprintName),
         'fields' => [
             'description',
             'labels',
@@ -137,7 +138,13 @@ function splitTicketsByType(array $ticketData): array
 
 function generateSprintGoals()
 {
-    $ticketData = getTicketData();
+    $sprintName = $_SERVER['argv'][1] ?? null;
+    if ($sprintName === null) {
+        echo 'Please enter a valid sprint name';
+        exit(0);
+    }
+
+    $ticketData = getTicketData($sprintName);
     [$tasks, $stories] = splitTicketsByType($ticketData);
 
     echo getGeneratedSprintGoals(json_encode($tasks)) . getGeneratedSprintGoals(json_encode($stories), false);

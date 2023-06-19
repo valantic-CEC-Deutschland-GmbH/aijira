@@ -4,7 +4,7 @@ Generates sprint goals using OpenAI based on provided Jira tickets.
 
 ## Usage
 ```bash
-> aisprintgoals
+> aisprintgoals <SPRINT-NAME>
 ```
 
 ## Setup
@@ -22,12 +22,7 @@ The following env parameters need to be configured:
 - AI_JIRA_EMAIL
 - AI_JIRA_API_TOKEN
 - AI_JIRA_URL
-- AI_JIRA_JQL
 
-Example JQL, to receive all tickets of current (or planned) sprint:
-```
-project = SPRY and Sprint = "Spryker Sprint" and (Sprint in futureSprints() or Sprint in openSprints()) and type not in (Epic) order by created DESC
-```
 ## Others
 ### OpenAI
 - Model: gpt-3.5-turbo
