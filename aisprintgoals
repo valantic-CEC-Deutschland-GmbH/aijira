@@ -58,6 +58,7 @@ function getGeneratedSprintGoals(string $ticketData, bool $splitByLabels = true)
 
 function getTicketData(string $sprintName): array
 {
+    $projectName = getenv('AI_JIRA_PROJECT');
     $email = getenv('AI_JIRA_EMAIL');
     $jiraApiToken = getenv('AI_JIRA_API_TOKEN');
     $endpoint = sprintf(
@@ -72,7 +73,7 @@ function getTicketData(string $sprintName): array
     ];
 
     $data = [
-        'jql' => sprintf('project = SPRY and Sprint = "%s" and (Sprint in futureSprints() or Sprint in openSprints()) and type not in (Epic) order by created DESC', $sprintName),
+        'jql' => sprintf('project = "%s" and Sprint = "%s" and (Sprint in futureSprints() or Sprint in openSprints()) and type not in (Epic) order by created DESC', $projectName, $sprintName),
         'fields' => [
             'description',
             'labels',
