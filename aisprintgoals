@@ -53,7 +53,7 @@ function getGeneratedSprintGoals(string $ticketData, bool $splitByLabels = true)
     $responseData = callApi($endpoint, $headers, $data);
     $message = $responseData['choices'][0]['message']['content'];
 
-    return str_replace(['"', "\n"], '', $message);
+    return str_replace('"', '', $message);
 }
 
 function getTicketData(string $sprintName): array
@@ -69,7 +69,7 @@ function getTicketData(string $sprintName): array
 
     $headers = [
         'Content-Type: application/json',
-        'Authorization: Basic ' . base64_encode($email . ':' . $jiraApiToken),
+        'Authorization: Basic ' . base64_encode(getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN')),
     ];
 
     $data = [
@@ -141,14 +141,14 @@ function generateSprintGoals()
 {
     $sprintName = $_SERVER['argv'][1] ?? null;
     if ($sprintName === null) {
-        echo 'Please enter a valid sprint name';
+        echo "Please enter a valid sprint name. \nExample:\n> aisprintgoals \"Spryker Sprint\"";
         exit(0);
     }
 
     $ticketData = getTicketData($sprintName);
     [$tasks, $stories] = splitTicketsByType($ticketData);
 
-    echo getGeneratedSprintGoals(json_encode($tasks)) . getGeneratedSprintGoals(json_encode($stories), false);
+    echo getGeneratedSprintGoals(json_encode($tasks)) . "\n\nOverall:\n" . getGeneratedSprintGoals(json_encode($stories), false);
 }
 
 generateSprintGoals();
