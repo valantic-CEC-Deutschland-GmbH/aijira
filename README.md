@@ -22,6 +22,7 @@ The following env parameters need to be configured:
 - AI_JIRA_EMAIL
 - AI_JIRA_API_TOKEN
 - AI_JIRA_URL
+- AI_JIRA_PROJECT
 
 ## Others
 ### OpenAI
