@@ -1,151 +1,7 @@
 #!/usr/bin/php
 <?php
 
-function callApi(string $endpoint, array $headers, array $data): ?array
-{
-    $ch = curl_init($endpoint);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $response = curl_exec($ch);
-    curl_close($ch);
-
-    return json_decode($response, true);
-}
-
-function getGeneratedSprintGoals(string $ticketData, string $labels = ''): string
-{
-    $openAiKey = getenv('OPENAI_KEY');
-    $endpoint = 'https://api.openai.com/v1/chat/completions';
-
-    $headers = [
-        'Content-Type: application/json',
-        'Authorization: Bearer ' . $openAiKey,
-    ];
-
-    $goalsPerCategory = 3;
-
-    $prompt = sprintf(
-        'Generate one-sentence sprint goals based on the provided Jira ticket data%s. The sprint goal should shortly describe what will be done in this sprint. Do not just list the ticket titles but describe the most important tasks for this sprint. Generate a maximum of %s goals%s. Return only the sprint goals without comments or other text.',
-        $labels ? ', splitting the goals into the categories "' . $labels . '"' : '',
-        $goalsPerCategory,
-        $labels ? ' for each category' : ''
-    );
-
-    $data = [
-        'temperature' => 0,
-        'model' => 'gpt-3.5-turbo',
-        'messages' => [
-            [
-                'role' => 'system',
-                'content' => $prompt,
-            ],
-            [
-                'role' => 'user',
-                'content' => $ticketData,
-            ],
-        ],
-        'max_tokens' => 250,
-    ];
-
-    $responseData = callApi($endpoint, $headers, $data);
-    $message = $responseData['choices'][0]['message']['content'];
-
-    return str_replace('"', '', $message);
-}
-
-function getTicketData(string $sprintName): array
-{
-    $endpoint = sprintf(
-        '%s%s',
-        getenv('AI_JIRA_URL'),
-        '/rest/api/3/search'
-    );
-
-    $headers = [
-        'Content-Type: application/json',
-        'Authorization: Basic ' . base64_encode(getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN')),
-    ];
-
-    $data = [
-        'jql' => sprintf('project = "%s" and Sprint = "%s" and (Sprint in futureSprints() or Sprint in openSprints()) and type not in (Epic) order by created DESC', getenv('AI_JIRA_PROJECT'), $sprintName),
-        'fields' => [
-            'description',
-            'labels',
-            'summary',
-            'issuetype',
-        ],
-    ];
-
-    return callApi($endpoint, $headers, $data);
-}
-
-function formatDescription(array $descriptionParts): string
-{
-    $description = '';
-
-    foreach ($descriptionParts as $content) {
-        if ($content['type'] === null || $content['type'] !== 'paragraph') {
-            continue;
-        }
-
-        foreach ($content['content'] as $text) {
-            if ($text['type'] === 'text') {
-                $description .= $text['text'];
-            }
-        }
-    }
-
-    return $description;
-}
-
-function formatTicketData(array $ticket): array
-{
-    $description = '';
-    if (isset($ticket['fields']['description']['content'])) {
-        $description = formatDescription($ticket['fields']['description']['content']);
-    }
-
-    $labels = implode(',', $ticket['fields']['labels']);
-
-    return [
-        'title' => $ticket['fields']['summary'],
-        'description' => $description,
-        'labels' => $labels,
-    ];
-}
-
-
-function extractLabels(array $tickets): string
-{
-    $formattedLabels = [];
-    foreach ($tickets as $ticket) {
-        array_map(function (string $label) use (&$formattedLabels) {
-            $formattedLabels[] = $label;
-        }, explode(',', $ticket['labels']));
-    }
-
-    return implode(', ', array_unique($formattedLabels));
-}
-
-function splitTicketsByType(array $ticketData): array
-{
-    $tasks = [];
-    $stories = [];
-    foreach ($ticketData['issues'] as $ticket) {
-        $issueType = $ticket['fields']['issuetype']['name'];
-        $formattedTicket = formatTicketData($ticket);
-        if ($issueType === 'Story') {
-            $stories[] = $formattedTicket;
-        } else {
-            $tasks[] = $formattedTicket;
-        }
-    }
-
-    return [$tasks, $stories];
-}
+require __DIR__ . '/vendor/autoload.php';
 
 function generateSprintGoals()
 {
@@ -155,11 +11,14 @@ function generateSprintGoals()
         exit(0);
     }
 
-    $ticketData = getTicketData($sprintName);
-    [$tasks, $stories] = splitTicketsByType($ticketData);
-    $labels = extractLabels($tasks);
+    $client = new \AiJira\SprintGoals\Client();
+    $formatter = new \AiJira\SprintGoals\Formatter();
 
-    echo getGeneratedSprintGoals(json_encode($tasks), $labels) . "\n\nOverall:\n" . getGeneratedSprintGoals(json_encode($stories));
+    $ticketData = $client->getTicketData($sprintName);
+    [$tasks, $stories] = $formatter->splitTicketsByType($ticketData);
+    $labels = $formatter->extractLabels($tasks);
+
+    echo $client->getGeneratedSprintGoals(json_encode($tasks), $labels) . "\n\nOverall:\n" . $client->getGeneratedSprintGoals(json_encode($stories));
 }
 
 generateSprintGoals();
