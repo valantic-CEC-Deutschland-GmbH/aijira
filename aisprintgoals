@@ -15,7 +15,7 @@ function callApi(string $endpoint, array $headers, array $data): ?array
     return json_decode($response, true);
 }
 
-function getGeneratedSprintGoals(string $ticketData, bool $splitByLabels = true): string
+function getGeneratedSprintGoals(string $ticketData, string $labels = ''): string
 {
     $openAiKey = getenv('OPENAI_KEY');
     $endpoint = 'https://api.openai.com/v1/chat/completions';
@@ -29,9 +29,9 @@ function getGeneratedSprintGoals(string $ticketData, bool $splitByLabels = true)
 
     $prompt = sprintf(
         'Generate one-sentence sprint goals based on the provided Jira ticket data%s. The sprint goal should shortly describe what will be done in this sprint. Do not just list the ticket titles but describe the most important tasks for this sprint. Generate a maximum of %s goals%s. Return only the sprint goals without comments or other text.',
-        $splitByLabels ? ', splitting the goals into different categories, based on the ticket "labels" value' : '',
+        $labels ? ', splitting the goals into the categories "' . $labels . '"' : '',
         $goalsPerCategory,
-        $splitByLabels ? ' for each category' : ''
+        $labels ? ' for each category' : ''
     );
 
     $data = [
@@ -117,6 +117,19 @@ function formatTicketData(array $ticket): array
     ];
 }
 
+
+function extractLabels(array $tickets): string
+{
+    $formattedLabels = [];
+    foreach ($tickets as $ticket) {
+        array_map(function (string $label) use (&$formattedLabels) {
+            $formattedLabels[] = $label;
+        }, explode(',', $ticket['labels']));
+    }
+
+    return implode(', ', array_unique($formattedLabels));
+}
+
 function splitTicketsByType(array $ticketData): array
 {
     $tasks = [];
@@ -144,8 +157,9 @@ function generateSprintGoals()
 
     $ticketData = getTicketData($sprintName);
     [$tasks, $stories] = splitTicketsByType($ticketData);
+    $labels = extractLabels($tasks);
 
-    echo getGeneratedSprintGoals(json_encode($tasks)) . "\n\nOverall:\n" . getGeneratedSprintGoals(json_encode($stories), false);
+    echo getGeneratedSprintGoals(json_encode($tasks), $labels) . "\n\nOverall:\n" . getGeneratedSprintGoals(json_encode($stories));
 }
 
 generateSprintGoals();
