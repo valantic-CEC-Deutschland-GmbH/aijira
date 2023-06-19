@@ -28,7 +28,7 @@ The following env parameters need to be configured:
 ### OpenAI
 - Model: gpt-3.5-turbo
 - Max tokens: 250
-- Sprint goals per category: 3 
+- Sprint goals per category: 3
 
 Ticket prompt:
 ```
@@ -39,3 +39,8 @@ Story prompt:
 ```
 Generate one-sentence sprint goals based on the provided Jira ticket data. The sprint goal should shortly describe what will be done in this sprint. Do not just list the ticket titles but describe the most important tasks for this sprint. Generate a maximum of 3 goals. Return only the sprint goals without comments or other text.
 ```
+
+## ToDo
+- Testcase generator "Ticket NR"
+- Sprint Review Ticket List generator "DateRange"
+- Ticket Quality Improver "Ticket NR"
