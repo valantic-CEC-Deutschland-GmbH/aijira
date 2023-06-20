@@ -49,17 +49,22 @@ class JiraClient
     private function callApi(string $endpoint, array $data, string $method = 'GET'): ?array
     {
         $client = new \GuzzleHttp\Client();
-        $response = $client->request(
-            $method,
-            $endpoint,
-            [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Basic ' . base64_encode(getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN')),
-                ],
-                'body' => json_encode($data),
-            ]
-        );
+        try {
+            $response = $client->request(
+                $method,
+                $endpoint,
+                [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Authorization' => 'Basic ' . base64_encode(getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN')),
+                    ],
+                    'body' => json_encode($data),
+                ]
+            );
+        } catch (\Exception $e) {
+            echo "Error while fetching jira data \n" . $e->getMessage();
+            exit;
+        }
 
         return json_decode((string)$response->getBody(), true);
     }
