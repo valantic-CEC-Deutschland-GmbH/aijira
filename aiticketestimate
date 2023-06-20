@@ -61,6 +61,6 @@ function getTicketEstimation(array $ticket): string
 }
 
 $ticketData = (new JiraClient())->getTicketByKey($ticketNumber);
-$format = (new Formatter())->formatTicketData($ticketData);
+$ticketData = (new Formatter())->extractTicketText($ticketData);
 
-echo getTicketEstimation($format);
+echo getTicketEstimation($ticketData);

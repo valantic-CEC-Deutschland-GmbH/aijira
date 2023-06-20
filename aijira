@@ -33,7 +33,7 @@ $application->add(new class('ticket:estimate') extends Command {
     public function __construct(string $name = null)
     {
         parent::__construct($name);
-        $this->setDescription('Use OpenAI to estimate your ticket.');
+        $this->setDescription('Use OpenAI to get an estimation in hours for a specific.');
         $this->addArgument('ticket-no', InputArgument::REQUIRED, 'JIRA Ticket Number');
     }
 
