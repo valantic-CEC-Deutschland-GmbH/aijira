@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AiJira\Jira;
 
+use GuzzleHttp\Client;
+
 class JiraClient
 {
     public function getTicketsBySprintName(string $sprintName): array
@@ -48,9 +50,8 @@ class JiraClient
 
     private function callApi(string $endpoint, array $data, string $method = 'GET'): ?array
     {
-        $client = new \GuzzleHttp\Client();
         try {
-            $response = $client->request(
+            $response = (new Client())->request(
                 $method,
                 $endpoint,
                 [

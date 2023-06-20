@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AiJira\OpenAI;
 
+use GuzzleHttp\Client;
+
 class OpenAIClient
 {
     public function getGeneratedSprintGoals(string $ticketData, string $labels = ''): string
@@ -62,8 +64,7 @@ class OpenAIClient
 
     private function callApi(string $endpoint, array $data): string
     {
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request(
+        $response = (new Client())->request(
             'POST',
             $endpoint,
             [
