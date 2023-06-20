@@ -20,9 +20,8 @@ $application->add(new class('ticket:validate') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = "aiticketvalidator {$input->getArgument('ticket-no')}";
+        $command = 'aiticketvalidator "'.$input->getArgument('ticket-no').'"';
         exec($command, $outputBuffer);
-        $output->writeln('Command output:');
         array_map([$output, 'writeln'], $outputBuffer);
 
         return Command::SUCCESS;
@@ -39,9 +38,8 @@ $application->add(new class('ticket:estimate') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = "aiticketestimate {$input->getArgument('ticket-no')}";
+        $command = 'aiticketestimate "'.$input->getArgument('ticket-no').'"';
         exec($command, $outputBuffer);
-        $output->writeln('Command output:');
         array_map([$output, 'writeln'], $outputBuffer);
 
         return Command::SUCCESS;
@@ -52,15 +50,14 @@ $application->add(new class('ticket:ask') extends Command {
     public function __construct(string $name = null)
     {
         parent::__construct($name);
-        $this->setDescription('Use OpenAI to ask the right questions to your ticket.');
+        $this->setDescription('Use OpenAI to ask the right questions for a user story.');
         $this->addArgument('ticket-no', InputArgument::REQUIRED, 'JIRA Ticket Number');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = "aiticketinterview {$input->getArgument('ticket-no')}";
+        $command = 'aiticketinterview "'.$input->getArgument('ticket-no').'"';
         exec($command, $outputBuffer);
-        $output->writeln('Command output:');
         array_map([$output, 'writeln'], $outputBuffer);
 
         return Command::SUCCESS;
@@ -77,9 +74,8 @@ $application->add(new class('sprint:review') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = "aisprintreview {$input->getArgument('sprint-name')}";
+        $command = 'aisprintreview "'.$input->getArgument('sprint-name').'"';
         exec($command, $outputBuffer);
-        $output->writeln('Command output:');
         array_map([$output, 'writeln'], $outputBuffer);
 
         return Command::SUCCESS;
@@ -96,9 +92,8 @@ $application->add(new class('sprint:goals') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = "aisprintgoals {$input->getArgument('sprint-name')}";
+        $command = 'aisprintgoals "'.$input->getArgument('sprint-name').'"';
         exec($command, $outputBuffer);
-        $output->writeln('Command output:');
         array_map([$output, 'writeln'], $outputBuffer);
 
         return Command::SUCCESS;

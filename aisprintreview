@@ -20,8 +20,8 @@ function getMergeRequests(string $gitlabProjectId, DateTimeImmutable $startDate,
     $url = getenv('AI_GITLAB_URL').'api/v4/projects/'.$gitlabProjectId.'/merge_requests';
 
     $blacklist = [
-            'nxs_schoenfeld',
-            'dominik_baehr',
+//            'nxs_schoenfeld',
+//            'dominik_baehr',
     ];
 
     $mergeRequests = \json_decode((new \GuzzleHttp\Client())->request(
