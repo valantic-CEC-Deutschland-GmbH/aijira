@@ -39,7 +39,7 @@ class OpenAIClient
     public function getGeneratedTicketDescription(string $ticketData): string
     {
         $endpoint = 'https://api.openai.com/v1/chat/completions';
-        $prompt = 'You will receive the title and description of a Jira ticket. Correct and improve the wording of this ticket and return both the new title and the new description, without comments or other text.';
+        $prompt = 'Given the title and description of a Jira ticket, your task is to enhance the wording of the ticket and provide revised versions of the title and description. Please exclude any comments or extraneous text from your response.';
 
         $data = [
             'temperature' => 0,
