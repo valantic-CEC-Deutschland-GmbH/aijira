@@ -23,6 +23,7 @@ class JiraClient
                 'description',
                 'labels',
                 'issuetype',
+                'timetracking'
             ],
         ];
 

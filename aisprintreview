@@ -1,0 +1,187 @@
+#!/usr/bin/php
+<?php
+
+use AiJira\Jira\JiraClient;
+
+require __DIR__ . '/vendor/autoload.php';
+
+$paramSprintName = $_SERVER['argv'][1] ?? null;
+if ($paramSprintName === null) {
+    echo "Please enter a valid sprint name. \nExample:\n> aisprintreview \"Spryker Sprint 20\" \"476,735\"";
+    exit(0);
+}
+
+function getMergeRequests(string $gitlabProjectId, DateTimeImmutable $startDate, DateTimeImmutable $endDate): array
+{
+    $url = getenv('AI_GITLAB_URL').'api/v4/projects/'.$gitlabProjectId.'/merge_requests';
+
+    $blacklist = [
+            'nxs_schoenfeld',
+            'dominik_baehr',
+    ];
+
+    $mergeRequests = \json_decode((new \GuzzleHttp\Client())->request(
+        'GET',
+        $url,
+        [
+            'headers' => [
+                'PRIVATE-TOKEN' => getenv('AI_GITLAB_TOKEN'),
+            ],
+            'query' => [
+                'updated_before' => $endDate->format('Y-m-d\T00:00:00\Z'),
+                'updated_after' => $startDate->format('Y-m-d\T00:00:00\Z'),
+                'state' => 'merged',
+                'per_page' => 100,
+                'not[labels]' => 'renovate',
+            ],
+        ]
+    )->getBody()->getContents(), true,512,JSON_THROW_ON_ERROR);
+
+    $filteredMergeRequests = [];
+    foreach ($mergeRequests as $entry) {
+        $author = $entry['author']['username'];
+        if (!in_array($author, $blacklist, true)) {
+            $filteredMergeRequests[$author][] = ['author'=>$author, 'title'=>$entry['title']];
+        }
+    }
+
+    return $filteredMergeRequests;
+}
+
+
+function makeCurlRequest($url): string {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_USERPWD, getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN'));
+    $response = curl_exec($ch);
+    curl_close($ch);
+    return $response;
+}
+
+function getBoards(): string {
+    $url = getenv('AI_JIRA_URL') . '/rest/agile/1.0/board?projectKeyOrId='.getenv('AI_JIRA_PROJECT');
+    return makeCurlRequest($url);
+}
+
+function getSprints($boardId): string {
+    $url = getenv('AI_JIRA_URL') . '/rest/agile/1.0/board/' . $boardId . '/sprint';
+    return makeCurlRequest($url);
+}
+
+function getSprint(string $paramSprintName): array
+{
+    // Get the list of boards
+    $boardsResponse = getBoards();
+    $boards = json_decode($boardsResponse, true);
+
+    $checkedSprints = [];
+
+    // Iterate through boards
+    foreach ($boards['values'] as $board) {
+        $boardId = $board['id'];
+
+        // Get the list of sprints for each board
+        $sprintsResponse = getSprints($boardId);
+        $sprints = json_decode($sprintsResponse, true);
+
+        if (!isset($sprints['values'])) {
+            continue;
+        }
+        $requestedJiraSprint = [];
+
+        $checkedSprints = array_merge($checkedSprints, $sprints['values']);
+
+        // Process each sprint
+        foreach ($sprints['values'] as $sprint) {
+            if ($sprint['name'] === $paramSprintName) {
+                $requestedJiraSprint = $sprint;
+            }
+        }
+    }
+
+    if (empty($requestedJiraSprint)) {
+        echo sprintf(
+            "Provided Sprint not found when checking %s. List of valid options: %s",
+            getenv('AI_JIRA_URL'), json_encode(array_map(fn($sprint) => [$sprint['name']], $checkedSprints))
+        );
+        exit(0);
+    }
+
+    return $requestedJiraSprint;
+}
+
+function generateSprintReviewFromMergeRequestsAndTickets(array $mergeRequests, array $tasksAndStories, string $sprintName): string
+{
+    $prompt = 'Given a JSON-encoded list of git merge requests grouped per author,
+     as well as additional ticket information, 
+     generate a meaningful list of topics for a Sprint Review Meeting of "'.$sprintName.'"
+      that can be presented to non-technical customers. Please describe each topic meaningful but short and include the corresponding Jira ticket number.
+       Consider the entire list of tickets to provide more context. If necessary, filter out topics with lower task estimations.
+        Finally, suggest an author for each sprint review topic based on the merge request author.
+        Return only list without comments or other text.
+    ';
+    $openAiKey = getenv('OPENAI_KEY');
+    $endpoint = 'https://api.openai.com/v1/chat/completions';
+
+    $data = [
+        'temperature' => 0,
+        'model' => 'gpt-3.5-turbo',
+        'messages' => [
+            [
+                'role' => 'system',
+                'content' => $prompt,
+            ],
+            [
+                'role' => 'assistant',
+                'content' => json_encode([
+                    'merge_requests' => $mergeRequests,
+                    'ticket_list' => $tasksAndStories,
+                ]),
+            ],
+        ],
+    ];
+
+    $headers = [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $openAiKey,
+    ];
+
+    $ch = curl_init($endpoint);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $responseData = json_decode($response, true);
+    $message = $responseData['choices'][0]['message']['content'];
+
+    return str_replace('"', '', $message);
+}
+
+
+$jiraSprint = getSprint($paramSprintName);
+
+$startDate = new \DateTimeImmutable($jiraSprint['startDate']);
+$endDate = new \DateTimeImmutable($jiraSprint['endDate']);
+
+$mergeRequests = [];
+foreach (explode(',',getenv('AI_GITLAB_PROJECT_IDS')) as $gitlabProjectID)
+{
+    $mergeRequests = array_merge($mergeRequests, getMergeRequests($gitlabProjectID, $startDate, $endDate));
+}
+
+$client = new JiraClient();
+$ticketData = $client->getTicketsBySprintName($paramSprintName);
+
+$tasks = [];
+foreach ($ticketData['issues'] as $ticket) {
+    if ($ticket['fields']['issuetype']['name'] !=='Story') {
+        $tasks[$ticket['key']]=['title'=>$ticket['fields']['summary'], 'estimation'=>$ticket['fields']['timetracking']['originalEstimate']];
+    }
+}
+
+echo generateSprintReviewFromMergeRequestsAndTickets($mergeRequests, $tasks, $paramSprintName);
