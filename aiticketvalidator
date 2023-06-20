@@ -1,0 +1,13 @@
+#!/usr/bin/php
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+$ticketNumber = $_SERVER['argv'][1] ?? null;
+if ($ticketNumber === null) {
+    echo "Please enter a valid ticket number. \nExample:\n> aiticketvalidator \"SPRY-1234\"";
+    exit(0);
+}
+
+$ticketValidator = new AiJira\TicketValidator\TicketValidator();
+echo $ticketValidator->validateTicketDescription($ticketNumber);
