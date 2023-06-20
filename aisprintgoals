@@ -3,22 +3,11 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-function generateSprintGoals()
-{
-    $sprintName = $_SERVER['argv'][1] ?? null;
-    if ($sprintName === null) {
-        echo "Please enter a valid sprint name. \nExample:\n> aisprintgoals \"Spryker Sprint\"";
-        exit(0);
-    }
-
-    $client = new \AiJira\SprintGoals\Client();
-    $formatter = new \AiJira\SprintGoals\Formatter();
-
-    $ticketData = $client->getTicketData($sprintName);
-    [$tasks, $stories] = $formatter->splitTicketsByType($ticketData);
-    $labels = $formatter->extractLabels($tasks);
-
-    echo $client->getGeneratedSprintGoals(json_encode($tasks), $labels) . "\n\nOverall:\n" . $client->getGeneratedSprintGoals(json_encode($stories));
+$sprintName = $_SERVER['argv'][1] ?? null;
+if ($sprintName === null) {
+    echo "Please enter a valid sprint name. \nExample:\n> aisprintgoals \"Spryker Sprint\"";
+    exit(0);
 }
 
-generateSprintGoals();
+$sprintGoals = new \AiJira\SprintGoals\SprintGoals();
+echo $sprintGoals->generateSprintGoals($sprintName);
