@@ -6,15 +6,21 @@ namespace AiJira\SprintGoals;
 
 class SprintGoals
 {
+    private Client $client;
+    private Formatter $formatter;
+
+    public function __construct()
+    {
+        $this->client = new Client();
+        $this->formatter = new Formatter();
+    }
+
     public function generateSprintGoals(string $sprintName): string
     {
-        $client = new Client();
-        $formatter = new Formatter();
+        $ticketData = $this->client->getTicketData($sprintName);
+        [$tasks, $stories] = $this->formatter->splitTicketsByType($ticketData);
+        $labels = $this->formatter->extractLabels($tasks);
 
-        $ticketData = $client->getTicketData($sprintName);
-        [$tasks, $stories] = $formatter->splitTicketsByType($ticketData);
-        $labels = $formatter->extractLabels($tasks);
-
-        return $client->getGeneratedSprintGoals(json_encode($tasks), $labels) . "\n\nOverall:\n" . $client->getGeneratedSprintGoals(json_encode($stories));
+        return $this->client->getGeneratedSprintGoals(json_encode($tasks), $labels) . "\n\nOverall:\n" . $this->client->getGeneratedSprintGoals(json_encode($stories));
     }
 }
