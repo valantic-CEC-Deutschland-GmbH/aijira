@@ -4,7 +4,8 @@
     "type": "library",
     "license": "MIT",
     "bin": [
-      "aisprintgoals"
+      "aisprintgoals",
+      "aiticketvalidator"
     ],
     "authors": [
         {

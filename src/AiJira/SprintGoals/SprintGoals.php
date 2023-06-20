@@ -4,23 +4,28 @@ declare(strict_types=1);
 
 namespace AiJira\SprintGoals;
 
+use AiJira\Jira\JiraClient;
+use AiJira\OpenAI\OpenAIClient;
+
 class SprintGoals
 {
-    private Client $client;
+    private JiraClient $jiraClient;
+    private OpenAIClient $openaiClient;
     private Formatter $formatter;
 
     public function __construct()
     {
-        $this->client = new Client();
+        $this->jiraClient = new JiraClient();
+        $this->openaiClient = new OpenAIClient();
         $this->formatter = new Formatter();
     }
 
     public function generateSprintGoals(string $sprintName): string
     {
-        $ticketData = $this->client->getTicketData($sprintName);
+        $ticketData = $this->jiraClient->getTicketsBySprintName($sprintName);
         [$tasks, $stories] = $this->formatter->splitTicketsByType($ticketData);
         $labels = $this->formatter->extractLabels($tasks);
 
-        return $this->client->getGeneratedSprintGoals(json_encode($tasks), $labels) . "\n\nOverall:\n" . $this->client->getGeneratedSprintGoals(json_encode($stories));
+        return $this->openaiClient->getGeneratedSprintGoals(json_encode($tasks), $labels) . "\n\nOverall:\n" . $this->openaiClient->getGeneratedSprintGoals(json_encode($stories));
     }
 }
