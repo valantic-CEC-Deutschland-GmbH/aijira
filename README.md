@@ -5,8 +5,8 @@ Generates sprint goals using OpenAI based on provided Jira tickets.
 ## Usage
 ```bash
 > aisprintgoals <SPRINT-NAME>
-> aisprintreview <SPRINT-NAME>
 > aiticketvalidator <TICKET-KEY>
+> aisprintreview <SPRINT-NAME>
 ```
 
 ## Setup
@@ -22,13 +22,15 @@ composer global require valantic/aijira
 ## Configuration
 The following env parameters need to be configured:
 
-### General
+### General Environment Variables
 - OPENAI_KEY
+## `aisprintgoals, aiticketvalidator`
 - AI_JIRA_EMAIL (i.e. schoenfeld@nexus-netsoft.com)
 - AI_JIRA_API_TOKEN (i.e. ATATT3xF...)
 - AI_JIRA_URL (i.e. https://lr4digital.atlassian.net/)
 - AI_JIRA_PROJECT (i.e. SPRY)
 - AI_JIRA_BOARD_ID (i.e. 10)
+## `aisprintreview`
 - AI_GITLAB_URL (i.e. https://gitlab.nxs360.com/)
 - AI_GITLAB_TOKEN
 - AI_GITLAB_PROJECT_IDS (i.e. 476,735)
