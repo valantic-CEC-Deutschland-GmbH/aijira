@@ -4,6 +4,7 @@
     "type": "library",
     "license": "MIT",
     "bin": [
+      "aijira",
       "aisprintgoals",
       "aisprintreview",
       "aiticketestimate",
