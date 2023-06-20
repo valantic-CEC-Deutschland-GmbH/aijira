@@ -1,13 +1,15 @@
 # aijira
 
-Generates sprint goals using OpenAI based on provided Jira tickets.
+Automization for regular project related tasks - no developer likes.
 
 ## Usage
 ```bash
 > aijira <COMMAND>
 > aisprintgoals <SPRINT-NAME>
-> aiticketvalidator <TICKET-KEY>
 > aisprintreview <SPRINT-NAME>
+> aiticketvalidator <TICKET-KEY>
+> aiticketinterview <TICKET-KEY>
+> aiticketestimate <TICKET-KEY>
 ```
 
 ## Setup
@@ -25,7 +27,7 @@ The following env parameters need to be configured:
 
 ### General Environment Variables
 - OPENAI_KEY
-## `aisprintgoals, aiticketvalidator, aiticketestimate`
+## `aisprintgoals, aiticketvalidator, aiticketestimate, aiticketinterview`
 - AI_JIRA_EMAIL (i.e. schoenfeld@nexus-netsoft.com)
 - AI_JIRA_API_TOKEN (i.e. ATATT3xF...)
 - AI_JIRA_URL (i.e. https://lr4digital.atlassian.net/)
