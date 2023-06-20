@@ -24,7 +24,7 @@ The following env parameters need to be configured:
 
 ### General Environment Variables
 - OPENAI_KEY
-## `aisprintgoals, aiticketvalidator`
+## `aisprintgoals, aiticketvalidator, aiticketestimate`
 - AI_JIRA_EMAIL (i.e. schoenfeld@nexus-netsoft.com)
 - AI_JIRA_API_TOKEN (i.e. ATATT3xF...)
 - AI_JIRA_URL (i.e. https://lr4digital.atlassian.net/)
@@ -34,7 +34,6 @@ The following env parameters need to be configured:
 - AI_GITLAB_URL (i.e. https://gitlab.nxs360.com/)
 - AI_GITLAB_TOKEN
 - AI_GITLAB_PROJECT_IDS (i.e. 476,735)
-
 ## Others
 ### OpenAI
 - Model: gpt-3.5-turbo
@@ -55,11 +54,12 @@ Given the title and description of a Jira ticket, your task is to enhance the wo
 ```
 
 ## ToDo
-- `aijira-ticket-validate "Ticket No"` Ticket Quality Checker "Ticket NR"
-- `aijira-ticket-estimate "Ticket No"` Automatische Estimations (Only Tasks)
-- `aijira-sprint-review-generate "Sprint Name"` Sprint Review Ticket List generator "DateRange"
+- [x] `aijira-ticket-validate "Ticket No"` Ticket Quality Checker "Ticket NR"
+- [x] `aijira-ticket-estimate "Ticket No"` Automatische Estimations (Only Tasks)
+- [x] `aijira-sprint-review-generate "Sprint Name"` Sprint Review Ticket List generator "DateRange"
 - `aijira-ticket-interview "Ticket No"` Ticket/Story Interview Questions to productowner (`Liste die Fragen für das Benutzerinterview für das folgende Feature auf: [Feature beschreiben]`)
 - `aijira-ticket-acceptance-criteria "Ticket No"` Auto ACs
 - `aijira-ticket-test-cases "Ticket No"` Testcase generator "Ticket NR"
 - `aijira-gitlab-release-notes UNKNOWN PARAMETER` Auto release notes gitlab > CHANGELOG-2023-06-15.md
 - perfect prompt gpt4 plugin -> improve our prompts
+- symfony console aijira wrapper to for ai commands, its usage and description
