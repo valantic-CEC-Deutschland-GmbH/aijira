@@ -67,6 +67,7 @@ class Client
                 'labels',
                 'summary',
                 'issuetype',
+                'timetracking'
             ],
         ];
 
