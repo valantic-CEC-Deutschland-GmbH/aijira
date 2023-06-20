@@ -1,0 +1,109 @@
+#!/usr/bin/php
+<?php
+
+use AiJira\Jira\JiraClient;use AiJira\TicketValidator\Formatter;
+
+require __DIR__ . '/vendor/autoload.php';
+
+$ticketNumber = $_SERVER['argv'][1] ?? null;
+if ($ticketNumber === null) {
+    echo "Please enter a valid ticket number. \nExample:\n> aiticketvalidator \"SPRY-1234\"";
+    exit(0);
+}
+
+function getTicketInterviewQuestions(array $ticket): string
+{
+    $prompt = 'I will send you a ticket with all its details in JSON Format. 
+    Please define questions that will improve ticket content quality.
+    Only questions allowed, that are not already answered in provided ticket details.
+    Please return a numbered list. Dont ask questions regarding ticket structure, just try understand the content of this ticket and ask your questions: '.json_encode($ticket).'
+      ';
+    $openAiKey = getenv('OPENAI_KEY');
+    $endpoint = 'https://api.openai.com/v1/chat/completions';
+
+    $data = [
+        'n' => 1,
+        'temperature' => 0,
+        'model' => 'gpt-3.5-turbo',
+        'messages' => [
+            [
+                'role' => 'system',
+                'content' => $prompt,
+            ],
+        ],
+    ];
+
+    $headers = [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $openAiKey,
+    ];
+
+    $ch = curl_init($endpoint);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $responseData = json_decode($response, true);
+    $message = $responseData['choices'][0]['message']['content'];
+
+    return $message;
+}
+
+
+function extractTextFromTicket($ticket) {
+    $newArray = array();
+
+    // Extract title
+    $newArray['title'] = $ticket['title'];
+
+    // Extract description
+    $newArray['description'] = $ticket['description'];
+
+    // Extract fields
+    $fields = $ticket['fields'];
+
+    foreach ($fields as $fieldKey => $fieldValue) {
+        if (is_array($fieldValue) && isset($fieldValue['content'])) {
+            // Extract text from the field value
+            $newArray[$fieldKey] = extractTextFromContent($fieldValue['content']);
+        }
+    }
+
+    return $newArray;
+}
+
+function extractTextFromContent($content) {
+    $textArray = array();
+
+    foreach ($content as $item) {
+        if (isset($item['content'])) {
+            // Recursively extract text from nested content
+            $nestedText = extractTextFromContent($item['content']);
+
+            // Merge nested text with the current text array
+            $textArray = array_merge($textArray, $nestedText);
+        } elseif (isset($item['text'])) {
+            // Extract text from the item
+            $textArray[] = $item['text'];
+        }
+
+        // You can add more conditions for other item types if needed
+
+        // Otherwise, skip the item
+    }
+
+    return $textArray;
+}
+
+$ticketData = (new JiraClient())->getTicketByKey($ticketNumber);
+$format = (new Formatter())->formatTicketData($ticketData);
+
+// Extract text from the ticket and save it into a new array structure
+$newTicketArray = extractTextFromTicket($format);
+
+
+echo getTicketInterviewQuestions($newTicketArray);
