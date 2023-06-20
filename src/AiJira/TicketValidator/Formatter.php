@@ -66,11 +66,31 @@ class Formatter
     {
         $customFields = [];
         foreach ($fields as $key => $field) {
-            if (!empty($field) && str_starts_with($key, 'customfield')) {
-                $customFields[$key] = $field;
+            if (!empty($field['content']) && str_starts_with($key, 'customfield')) {
+                $content = $this->formatContent($field['content'], '');
+                $customFields[$key] = $content;
             }
         }
 
         return $customFields;
+    }
+
+    private function formatContent($content, $indent = ''): string
+    {
+        $result = '';
+
+        foreach ($content as $element) {
+            if ($element['type'] === 'codeBlock') {
+                continue;
+            }
+
+            if (isset($element['content'])) {
+                $result .= $this->formatContent($element['content'], $indent) . "\n";
+            } elseif ($element['type'] === 'text') {
+                $result .= $indent . $element['text'];
+            }
+        }
+
+        return $result;
     }
 }
