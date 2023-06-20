@@ -38,10 +38,13 @@ class OpenAIClient
         return $this->callApi($endpoint, $data);
     }
 
-    public function getGeneratedTicketDescription(string $ticketData): string
+    public function getGeneratedTicketDescription(string $ticketData, string $fields): string
     {
         $endpoint = 'https://api.openai.com/v1/chat/completions';
-        $prompt = 'Given the title and description of a Jira ticket, your task is to enhance the wording of the ticket and provide revised versions of the title and description. Please exclude any comments or extraneous text from your response.';
+        $prompt = sprintf(
+            'Given the field data of a Jira ticket, your task is to enhance the wording of the ticket and provide revised versions of the fields %s. Please exclude any comments or extraneous text from your response.',
+            '"' . $fields . '"'
+        );
 
         $data = [
             'temperature' => 0,

@@ -9,14 +9,38 @@ class Formatter
     public function formatTicketData(array $ticket): array
     {
         $description = '';
-        if (isset($ticket['fields']['description']['content'])) {
-            $description = $this->formatDescription($ticket['fields']['description']['content']);
+        $fields = $ticket['fields'];
+        if (isset($fields['description']['content'])) {
+            $description = $this->formatDescription($fields['description']['content']);
         }
 
         return [
-            'title' => $ticket['fields']['summary'],
+            'title' => $fields['summary'],
             'description' => $description,
+            'type' => $ticket['fields']['issuetype']['name'],
+            'fields' => $this->extractCustomFields($fields),
         ];
+    }
+
+    public function mapTicketTypeFields(string $ticketType): array
+    {
+        return match ($ticketType) {
+            'Bug' => [
+                'Title',
+                'Description',
+                'Environment',
+                'Open questions',
+                'Acceptance criteria',
+                'Details',
+            ],
+            default => [
+                'Title',
+                'Description',
+                'Open questions',
+                'Acceptance criteria',
+                'Details'
+            ]
+        };
     }
 
     private function formatDescription(array $descriptionParts): string
@@ -36,5 +60,17 @@ class Formatter
         }
 
         return $description;
+    }
+
+    private function extractCustomFields(array $fields): array
+    {
+        $customFields = [];
+        foreach ($fields as $key => $field) {
+            if (!empty($field) && str_starts_with($key, 'customfield')) {
+                $customFields[$key] = $field;
+            }
+        }
+
+        return $customFields;
     }
 }
