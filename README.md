@@ -32,7 +32,7 @@ The following env parameters need to be configured:
 
 Ticket prompt:
 ```
-Generate one-sentence sprint goals based on the provided Jira ticket data, splitting the goals into different categories, based on the ticket "labels" value. The sprint goal should shortly describe what will be done in this sprint. Do not just list the ticket titles but describe the most important tasks for this sprint. Generate a maximum of 3 goals for each category. Return only the sprint goals without comments or other text.
+Generate one-sentence sprint goals based on the provided Jira ticket data, splitting the goals into the categories "<LABELS>". The sprint goal should shortly describe what will be done in this sprint. Do not just list the ticket titles but describe the most important tasks for this sprint. Generate a maximum of 3 goals for each category. Return only the sprint goals without comments or other text.
 ```
 
 Story prompt:
