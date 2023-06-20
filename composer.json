@@ -5,6 +5,9 @@
     "license": "MIT",
     "bin": [
       "aisprintgoals",
+      "aisprintreview",
+      "aiticketestimate",
+      "aiticketinterview",
       "aiticketvalidator"
     ],
     "authors": [
