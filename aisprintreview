@@ -1,6 +1,8 @@
 #!/usr/bin/php
 <?php
 
+use AiJira\Jira\JiraClient;
+
 require __DIR__ . '/vendor/autoload.php';
 
 $paramSprintName = $_SERVER['argv'][1] ?? null;
@@ -117,6 +119,7 @@ function generateSprintReviewFromMergeRequestsAndTickets(array $mergeRequests, a
       that can be presented to non-technical customers. Please describe each topic meaningful but short and include the corresponding Jira ticket number.
        Consider the entire list of tickets to provide more context. If necessary, filter out topics with lower task estimations.
         Finally, suggest an author for each sprint review topic based on the merge request author.
+        Return only list without comments or other text.
     ';
     $openAiKey = getenv('OPENAI_KEY');
     $endpoint = 'https://api.openai.com/v1/chat/completions';
@@ -171,8 +174,8 @@ foreach (explode(',',getenv('AI_GITLAB_PROJECT_IDS')) as $gitlabProjectID)
     $mergeRequests = array_merge($mergeRequests, getMergeRequests($gitlabProjectID, $startDate, $endDate));
 }
 
-$client = new \AiJira\SprintGoals\Client();
-$ticketData = $client->getTicketData($paramSprintName);
+$client = new JiraClient();
+$ticketData = $client->getTicketsBySprintName($paramSprintName);
 
 $tasks = [];
 foreach ($ticketData['issues'] as $ticket) {
