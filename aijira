@@ -108,7 +108,7 @@ $application->add(new class('sprint:goals') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = "aisprinttoals {$input->getArgument('sprint-name')}";
+        $command = "aisprintgoals {$input->getArgument('sprint-name')}";
         $output->writeln("Executing command: $command");
 
         exec($command, $outputBuffer);
