@@ -57,9 +57,9 @@ Given the title and description of a Jira ticket, your task is to enhance the wo
 - [x] `aijira-ticket-validate "Ticket No"` Ticket Quality Checker "Ticket NR"
 - [x] `aijira-ticket-estimate "Ticket No"` Automatische Estimations (Only Tasks)
 - [x] `aijira-sprint-review-generate "Sprint Name"` Sprint Review Ticket List generator "DateRange"
-- `aijira-ticket-interview "Ticket No"` Ticket/Story Interview Questions to productowner (`Liste die Fragen für das Benutzerinterview für das folgende Feature auf: [Feature beschreiben]`)
-- `aijira-ticket-acceptance-criteria "Ticket No"` Auto ACs
-- `aijira-ticket-test-cases "Ticket No"` Testcase generator "Ticket NR"
-- `aijira-gitlab-release-notes UNKNOWN PARAMETER` Auto release notes gitlab > CHANGELOG-2023-06-15.md
+- [x] `aijira-ticket-interview "Ticket No"` Ticket/Story Interview Questions to productowner (`Liste die Fragen für das Benutzerinterview für das folgende Feature auf: [Feature beschreiben]`)
+- [ ] `aijira-ticket-acceptance-criteria "Ticket No"` Auto ACs
+- [ ] `aijira-ticket-test-cases "Ticket No"` Testcase generator "Ticket NR"
+- [ ] `aijira-gitlab-release-notes UNKNOWN PARAMETER` Auto release notes gitlab > CHANGELOG-2023-06-15.md
 - perfect prompt gpt4 plugin -> improve our prompts
-- symfony console aijira wrapper to for ai commands, its usage and description
+- [x] symfony console aijira wrapper to for ai commands, its usage and description

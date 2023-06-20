@@ -17,7 +17,8 @@
     "require": {
         "php": ">=8.0",
         "guzzlehttp/guzzle": "^7.7",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "symfony/console": "^6.3"
     },
     "autoload": {
         "psr-4": {

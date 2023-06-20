@@ -1,0 +1,123 @@
+#!/usr/bin/env php
+<?php
+require __DIR__.'/vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+$application = new Application('aijira', '1.0.0');
+
+$application->add(new class('ticket:validate') extends Command {
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+        $this->setDescription('Use OpenAI to improve ticket quality.');
+        $this->addArgument('ticket-no', InputArgument::REQUIRED, 'JIRA Ticket Number');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $command = "aiticketvalidator {$input->getArgument('ticket-no')}";
+        $output->writeln("Executing command: $command");
+
+        exec($command, $outputBuffer);
+
+        $output->writeln('Command output:');
+        array_map([$output, 'writeln'], $outputBuffer);
+
+        return Command::SUCCESS;
+    }
+});
+
+$application->add(new class('ticket:estimate') extends Command {
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+        $this->setDescription('Use OpenAI to estimate your ticket.');
+        $this->addArgument('ticket-no', InputArgument::REQUIRED, 'JIRA Ticket Number');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $command = "aiticketestimate {$input->getArgument('ticket-no')}";
+        $output->writeln("Executing command: $command");
+
+        exec($command, $outputBuffer);
+
+        $output->writeln('Command output:');
+        array_map([$output, 'writeln'], $outputBuffer);
+
+        return Command::SUCCESS;
+    }
+});
+
+$application->add(new class('ticket:ask') extends Command {
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+        $this->setDescription('Use OpenAI to ask the right questions to your ticket.');
+        $this->addArgument('ticket-no', InputArgument::REQUIRED, 'JIRA Ticket Number');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $command = "aiticketinterview {$input->getArgument('ticket-no')}";
+        $output->writeln("Executing command: $command");
+
+        exec($command, $outputBuffer);
+
+        $output->writeln('Command output:');
+        array_map([$output, 'writeln'], $outputBuffer);
+
+        return Command::SUCCESS;
+    }
+});
+
+$application->add(new class('sprint:review') extends Command {
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+        $this->setDescription('Use OpenAI to generate a sprint review agenda.');
+        $this->addArgument('sprint-name', InputArgument::REQUIRED, 'JIRA Sprint Name');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $command = "aisprintreview {$input->getArgument('sprint-name')}";
+        $output->writeln("Executing command: $command");
+
+        exec($command, $outputBuffer);
+
+        $output->writeln('Command output:');
+        array_map([$output, 'writeln'], $outputBuffer);
+
+        return Command::SUCCESS;
+    }
+});
+
+$application->add(new class('sprint:goals') extends Command {
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+        $this->setDescription('Use OpenAI to generate your sprint goals for a planned or existing sprint.');
+        $this->addArgument('sprint-name', InputArgument::REQUIRED, 'JIRA Sprint Name');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $command = "aisprinttoals {$input->getArgument('sprint-name')}";
+        $output->writeln("Executing command: $command");
+
+        exec($command, $outputBuffer);
+
+        $output->writeln('Command output:');
+        array_map([$output, 'writeln'], $outputBuffer);
+
+        return Command::SUCCESS;
+    }
+});
+
+$application->run();
