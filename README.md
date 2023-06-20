@@ -4,6 +4,7 @@ Generates sprint goals using OpenAI based on provided Jira tickets.
 
 ## Usage
 ```bash
+> aijira <COMMAND>
 > aisprintgoals <SPRINT-NAME>
 > aiticketvalidator <TICKET-KEY>
 > aisprintreview <SPRINT-NAME>
