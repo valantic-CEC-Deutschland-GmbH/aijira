@@ -5,6 +5,7 @@ Generates sprint goals using OpenAI based on provided Jira tickets.
 ## Usage
 ```bash
 > aisprintgoals <SPRINT-NAME>
+> aiticketvalidator <TICKET-KEY>
 ```
 
 ## Setup
@@ -28,16 +29,19 @@ The following env parameters need to be configured:
 ### OpenAI
 - Model: gpt-3.5-turbo
 - Max tokens: 250
-- Sprint goals per category: 3
 
-Ticket prompt:
+### Prompts
+Ticket sprint goals:
 ```
 Generate one-sentence sprint goals based on the provided Jira ticket data, splitting the goals into the categories "<LABELS>". The sprint goal should shortly describe what will be done in this sprint. Do not just list the ticket titles but describe the most important tasks for this sprint. Generate a maximum of 3 goals for each category. Return only the sprint goals without comments or other text.
 ```
-
-Story prompt:
+Story sprint goals:
 ```
 Generate one-sentence sprint goals based on the provided Jira ticket data. The sprint goal should shortly describe what will be done in this sprint. Do not just list the ticket titles but describe the most important tasks for this sprint. Generate a maximum of 3 goals. Return only the sprint goals without comments or other text.
+```
+Ticket validation:
+```
+Given the title and description of a Jira ticket, your task is to enhance the wording of the ticket and provide revised versions of the title and description. Please exclude any comments or extraneous text from your response.
 ```
 
 ## ToDo
