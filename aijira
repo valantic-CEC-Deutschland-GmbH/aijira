@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-$application = new Application('aijira', '1.0.0');
+$application = new Application('OpenAI JIRA Tools', '1.0.0');
 
 $application->add(new class('ticket:validate') extends Command {
     public function __construct(string $name = null)
@@ -21,10 +21,7 @@ $application->add(new class('ticket:validate') extends Command {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $command = "aiticketvalidator {$input->getArgument('ticket-no')}";
-        $output->writeln("Executing command: $command");
-
         exec($command, $outputBuffer);
-
         $output->writeln('Command output:');
         array_map([$output, 'writeln'], $outputBuffer);
 
@@ -43,10 +40,7 @@ $application->add(new class('ticket:estimate') extends Command {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $command = "aiticketestimate {$input->getArgument('ticket-no')}";
-        $output->writeln("Executing command: $command");
-
         exec($command, $outputBuffer);
-
         $output->writeln('Command output:');
         array_map([$output, 'writeln'], $outputBuffer);
 
@@ -65,10 +59,7 @@ $application->add(new class('ticket:ask') extends Command {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $command = "aiticketinterview {$input->getArgument('ticket-no')}";
-        $output->writeln("Executing command: $command");
-
         exec($command, $outputBuffer);
-
         $output->writeln('Command output:');
         array_map([$output, 'writeln'], $outputBuffer);
 
@@ -87,10 +78,7 @@ $application->add(new class('sprint:review') extends Command {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $command = "aisprintreview {$input->getArgument('sprint-name')}";
-        $output->writeln("Executing command: $command");
-
         exec($command, $outputBuffer);
-
         $output->writeln('Command output:');
         array_map([$output, 'writeln'], $outputBuffer);
 
@@ -109,10 +97,7 @@ $application->add(new class('sprint:goals') extends Command {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $command = "aisprintgoals {$input->getArgument('sprint-name')}";
-        $output->writeln("Executing command: $command");
-
         exec($command, $outputBuffer);
-
         $output->writeln('Command output:');
         array_map([$output, 'writeln'], $outputBuffer);
 

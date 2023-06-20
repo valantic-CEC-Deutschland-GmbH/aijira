@@ -1,6 +1,8 @@
 # aijira
 Automization for regular project related tasks - no developer likes.
 
+![2023-06-20_22-41.png](2023-06-20_22-41.png)
+
 ## Usage
 ```bash
 > aijira <COMMAND>
@@ -22,7 +24,7 @@ composer global require valantic/aijira
 - Retrieve your [Gitlab Access Token](https://gitlab.nxs360.com/-/profile/personal_access_tokens)
 
 ## Configuration
-The following env parameters need to be configured:
+The following env parameters need to be configured, depending on CLI commands you like to use (just configure them all):
 
 ### General Environment Variables
 - OPENAI_KEY
