@@ -124,6 +124,7 @@ function generateSprintReviewFromMergeRequestsAndTickets(array $mergeRequests, a
        Consider the entire list of tickets to provide more context. If necessary, filter out topics with lower task estimations.
         Finally, suggest an author for each sprint review topic based on the merge request author.
         Return only list without comments or other text.
+        Please return an numbered list.
     ';
     $openAiKey = getenv('OPENAI_KEY');
     $endpoint = 'https://api.openai.com/v1/chat/completions';

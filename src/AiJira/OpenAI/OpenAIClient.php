@@ -59,7 +59,6 @@ class OpenAIClient
                     'content' => $ticketData,
                 ],
             ],
-            'max_tokens' => 250,
         ];
 
         return $this->callApi($endpoint, $data);
