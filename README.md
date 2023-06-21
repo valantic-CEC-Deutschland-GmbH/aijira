@@ -66,10 +66,17 @@ The following env parameters need to be configured, depending on CLI commands yo
 
 ### Use OpenAI to improve ticket quality.
 ```bash
-> aijira ticket:validate "SPRY-661
+> aijira ticket:validate "SPRY-661"
 ```
 
 ![2023-06-21_5.png](2023-06-21_5.png)
+
+### Use OpenAI to generate your release notes to a given sprint. Its automatically collecting all merge requests.
+```bash
+> aijira release-notes "Spryker Sprint 20"
+```
+
+![2023-06-21_20-59.png](2023-06-21_20-59.png)
 
 ## ToDo
 - [x] `aijira-ticket-validate "Ticket No"` Ticket Quality Checker "Ticket NR"
@@ -78,6 +85,6 @@ The following env parameters need to be configured, depending on CLI commands yo
 - [x] `aijira-ticket-interview "Ticket No"` Ticket/Story Interview Questions to productowner (`Liste die Fragen für das Benutzerinterview für das folgende Feature auf: [Feature beschreiben]`)
 - [ ] `aijira-ticket-acceptance-criteria "Ticket No"` Auto ACs
 - [ ] `aijira-ticket-test-cases "Ticket No"` Testcase generator "Ticket NR"
-- [ ] `aijira-gitlab-release-notes UNKNOWN PARAMETER` Auto release notes gitlab > CHANGELOG-2023-06-15.md
+- [ ] `aijira-gitlab-release-notes "Sprint Name"` Auto release notes gitlab > CHANGELOG-2023-06-15.md
 - perfect prompt gpt4 plugin -> improve our prompts
 - [x] symfony console aijira wrapper to for ai commands, its usage and description

@@ -110,10 +110,10 @@ class OpenAIClient
         return str_replace('.', '', $response);
     }
 
-    public function getGeneratedSprintReviewFromMergeRequestsAndTickets(array $mergeRequests, array $tasksAndStories, string $sprintName): string
+    public function getGeneratedSprintReviewFromMergeRequestsAndTickets(array $mergeRequests, array $jiraSprint): string
     {
         $endpoint = 'https://api.openai.com/v1/chat/completions';
-        $prompt = 'Given a JSON-encoded list of git `merge_requests` and `tickets` create a smart agenda where tickets and topics are grouped by its merge request author. Each merge request author will the topics he worked on. You can filter these topics based on their estimated time and potential impact on the customer experience. If possible, please add the corresponding ticket numbers to each topic you create - add `no-task` if you find no ticket number. Please combine topics and keep a clean uniformed structure. The headline should contain our sprint name: "' . $sprintName . '". ';
+        $prompt = 'Given a JSON-encoded list of git `merge_requests` create some fancy release notes. Sprint duration: "' . (new \DateTimeImmutable($jiraSprint['startDate']))->format('Y-m-d') . ' - '.(new \DateTimeImmutable($jiraSprint['endDate']))->format('Y-m-d').'". ';
 
         $data = [
             'temperature' => 0,
@@ -127,7 +127,6 @@ class OpenAIClient
                     'role' => 'assistant',
                     'content' => json_encode([
                         'merge_requests' => $mergeRequests,
-                        'tickets' => $tasksAndStories,
                     ]),
                 ],
             ],

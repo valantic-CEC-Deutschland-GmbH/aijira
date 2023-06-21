@@ -13,5 +13,5 @@ if ($paramSprintName === null) {
     exit(0);
 }
 
-$sprintReview = new \AiJira\SprintReview\ReleaseNotes();
-echo $sprintReview->getSprintReviewFromMergeRequestsAndTickets($paramSprintName);
+$sprintReview = new \AiJira\ReleaseNotes\ReleaseNotes();
+echo $sprintReview->getReleaseNotesromMergeRequests($paramSprintName);

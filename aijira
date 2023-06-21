@@ -105,4 +105,23 @@ $application->add(new class('sprint:goals') extends Command {
     }
 });
 
+
+$application->add(new class('release-notes') extends Command {
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+        $this->setDescription('Use OpenAI to generate your release notes to a given sprint. Its automatically collecting all merge requests.');
+        $this->addArgument('sprint-name', InputArgument::REQUIRED, 'JIRA Sprint Name');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $command = 'aireleasenotes "'.$input->getArgument('sprint-name').'"';
+        exec($command, $outputBuffer);
+        array_map([$output, 'writeln'], $outputBuffer);
+
+        return Command::SUCCESS;
+    }
+});
+
 $application->run();
