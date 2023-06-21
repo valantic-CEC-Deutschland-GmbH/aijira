@@ -117,6 +117,42 @@ class OpenAIClient
         return str_replace('.', '', $response);
     }
 
+    public function getGeneratedSprintReviewFromMergeRequestsAndTickets(array $mergeRequests, array $tasksAndStories, string $sprintName): string
+    {
+        $endpoint = 'https://api.openai.com/v1/chat/completions';
+        $prompt = 'Given a JSON-encoded list of git merge requests grouped per author,
+     as well as additional ticket information, 
+     generate a meaningful list of topics for a Sprint Review Meeting of "' . $sprintName . '"
+      that can be presented to non-technical customers. Please describe each topic meaningful but short and include the corresponding Jira ticket number.
+       Consider the entire list of tickets to provide more context. If necessary, filter out topics with lower task estimations.
+        Finally, suggest an author for each sprint review topic based on the merge request author.
+        Return only list without comments or other text.
+        Please return an numbered list.
+    ';
+
+        $data = [
+            'temperature' => 0,
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => $prompt,
+                ],
+                [
+                    'role' => 'assistant',
+                    'content' => json_encode([
+                        'merge_requests' => $mergeRequests,
+                        'ticket_list' => $tasksAndStories,
+                    ]),
+                ],
+            ],
+        ];
+
+        $response = $this->callApi($endpoint, $data);
+
+        return str_replace('"', '', $response);
+    }
+
     private function callApi(string $endpoint, array $data): string
     {
         $response = (new Client())->request(

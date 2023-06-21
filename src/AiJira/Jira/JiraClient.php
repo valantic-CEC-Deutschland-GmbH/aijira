@@ -42,6 +42,66 @@ class JiraClient
         return $this->getApi($endpoint);
     }
 
+    public function getSprint(string $paramSprintName): array
+    {
+        $checkedSprints = [];
+
+        $boards = $this->getBoards();
+        foreach ($boards['values'] as $board) {
+            if ($board['type'] !== 'scrum') {
+                continue;
+            }
+
+            $sprints = $this->getSprints($board['id']);
+            if (!isset($sprints['values'])) {
+                continue;
+            }
+
+            $checkedSprints = array_merge($checkedSprints, $sprints['values']);
+
+            $requestedJiraSprint = [];
+            foreach ($sprints['values'] as $sprint) {
+                if ($sprint['name'] === $paramSprintName) {
+                    $requestedJiraSprint = $sprint;
+                }
+            }
+        }
+
+        if (empty($requestedJiraSprint)) {
+            echo sprintf(
+                'Provided Sprint not found when checking %s. List of valid options: %s',
+                getenv('AI_JIRA_URL'), json_encode(array_map(fn($sprint) => [$sprint['name']], $checkedSprints))
+            );
+            exit(0);
+        }
+
+        return $requestedJiraSprint;
+    }
+
+    private function getBoards(): array
+    {
+        $endpoint = sprintf(
+            '%s/rest/agile/1.0/board',
+            getenv('AI_JIRA_URL'),
+        );
+        $data = [
+            'projectKeyOrId' => getenv('AI_JIRA_PROJECT')
+        ];
+
+        return $this->getApi($endpoint, $data);
+    }
+
+    private function getSprints($boardId): array
+    {
+        $endpoint = sprintf(
+            '%s/rest/agile/1.0/board/%s/sprint',
+            getenv('AI_JIRA_URL'),
+            $boardId
+        );
+
+        return $this->getApi($endpoint);
+    }
+
     private function postApi(string $endpoint, array $data = []): ?array
     {
         try {
@@ -51,7 +111,10 @@ class JiraClient
                 [
                     'headers' => [
                         'Content-Type' => 'application/json',
-                        'Authorization' => 'Basic ' . base64_encode(getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN')),
+                    ],
+                    'auth' => [
+                        getenv('AI_JIRA_EMAIL'),
+                        getenv('AI_JIRA_API_TOKEN')
                     ],
                     'body' => json_encode($data),
                 ]
@@ -73,7 +136,10 @@ class JiraClient
                 [
                     'headers' => [
                         'Content-Type' => 'application/json',
-                        'Authorization' => 'Basic ' . base64_encode(getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN')),
+                    ],
+                    'auth' => [
+                        getenv('AI_JIRA_EMAIL'),
+                        getenv('AI_JIRA_API_TOKEN')
                     ],
                     'query' => $data
                 ]
