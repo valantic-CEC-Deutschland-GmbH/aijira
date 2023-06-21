@@ -1,6 +1,6 @@
 {
     "name": "valantic/aijira",
-    "description": "Gets all tickets from current or planned sprint and generates sprint goals using OpenAI",
+    "description": "Use OpenAI to generate sprint goals, a sprint review agenda or jira ticket field descriptions.",
     "type": "library",
     "license": "MIT",
     "bin": [
