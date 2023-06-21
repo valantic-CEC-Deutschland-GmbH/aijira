@@ -22,6 +22,13 @@ class TicketEstimate
         $ticketData = $this->jiraClient->getTicketByKey($ticketNumber);
         $ticketData = $this->jiraFormatter->formatTicketData($ticketData);
 
-        return $this->openaiClient->getGeneratedTicketEstimation($ticketData);
+        $referenceTickets = $this->jiraClient->getEstimatedTickets();
+        $formattedReferenceTickets = [];
+        foreach ($referenceTickets['issues'] as $referenceTicket)
+        {
+            $formattedReferenceTickets[] = $this->jiraFormatter->formatTicketData($referenceTicket);
+        }
+
+        return $this->openaiClient->getGeneratedTicketEstimation($ticketData, $formattedReferenceTickets);
     }
 }

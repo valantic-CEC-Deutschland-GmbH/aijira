@@ -88,17 +88,10 @@ class OpenAIClient
         return $this->callApi($endpoint, $data);
     }
 
-    public function getGeneratedTicketEstimation(array $ticket): string
+    public function getGeneratedTicketEstimation(array $ticket, array $tickets): string
     {
         $endpoint = 'https://api.openai.com/v1/chat/completions';
-        $prompt = 'As a developer, I would like to have an estimated time for the provided Jira ticket. Please estimate in hours.
-    Dont come up with excuses, just estimate it.
-      I will use this as a prediction and orientiation.
-        Only return your suggestion, no comments or other texts.
-        You are allowed answer with a range of estimation, if you are not sure about a concrete number.
-        Only return the numbers, no text.
-        JIRA Ticket: ' . json_encode($ticket) . '
-      ';
+        $prompt = 'As a developer, I would like to have an estimated time for the provided Jira ticket. Please estimate in hours. Dont come up with excuses or substantiation -> just estimate it. I will use this as a prediction and orientiation. Answer me without any suggestion or comments or other texts, only give me the estimation in format: ###-### hours. This is the JIRA Ticket that you estimate: ' . json_encode($ticket) . '. Here are some estimated tickets you can use as a reference: '. json_encode($tickets);
 
         $data = [
             'n' => 1,
@@ -120,15 +113,7 @@ class OpenAIClient
     public function getGeneratedSprintReviewFromMergeRequestsAndTickets(array $mergeRequests, array $tasksAndStories, string $sprintName): string
     {
         $endpoint = 'https://api.openai.com/v1/chat/completions';
-        $prompt = 'Given a JSON-encoded list of git merge requests grouped per author,
-     as well as additional ticket information, 
-     generate a meaningful list of topics for a Sprint Review Meeting of "' . $sprintName . '"
-      that can be presented to non-technical customers. Please describe each topic meaningful but short and include the corresponding Jira ticket number.
-       Consider the entire list of tickets to provide more context. If necessary, filter out topics with lower task estimations.
-        Finally, suggest an author for each sprint review topic based on the merge request author.
-        Return only list without comments or other text.
-        Please return an numbered list.
-    ';
+        $prompt = 'Given a JSON-encoded list of git `merge_requests` and `tickets` create a smart agenda where tickets and topics are grouped by its merge request author. Each merge request author will the topics he worked on. You can filter these topics based on their estimated time and potential impact on the customer experience. If possible, please add the corresponding ticket numbers to each topic you create - add `no-task` if you find no ticket number. Please combine topics and keep a clean uniformed structure. The headline should contain our sprint name: "' . $sprintName . '". ';
 
         $data = [
             'temperature' => 0,
@@ -142,7 +127,7 @@ class OpenAIClient
                     'role' => 'assistant',
                     'content' => json_encode([
                         'merge_requests' => $mergeRequests,
-                        'ticket_list' => $tasksAndStories,
+                        'tickets' => $tasksAndStories,
                     ]),
                 ],
             ],

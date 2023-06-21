@@ -55,7 +55,7 @@ $application->add(new class('ticket:ask') extends Command {
     public function __construct(string $name = null)
     {
         parent::__construct($name);
-        $this->setDescription('Use OpenAI to ask the right questions for a user story.');
+        $this->setDescription('Use OpenAI to ask the right questions. (Works best with a Story)');
         $this->addArgument('ticket-no', InputArgument::REQUIRED, 'JIRA Ticket Number');
     }
 

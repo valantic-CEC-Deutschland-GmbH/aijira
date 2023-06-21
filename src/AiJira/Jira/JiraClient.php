@@ -30,6 +30,29 @@ class JiraClient
         return $this->postApi($endpoint, $data);
     }
 
+    public function getEstimatedTickets(): array
+    {
+        $endpoint = sprintf(
+            '%s%s',
+            getenv('AI_JIRA_URL'),
+            '/rest/api/3/search'
+        );
+
+        $data = [
+            'jql' => sprintf('project = "%s" AND status = Done and originalEstimate > 0 ORDER BY updated', getenv('AI_JIRA_PROJECT')),
+            'fields' => [
+                'summary',
+                'description',
+                'labels',
+                'issuetype',
+                'timetracking'
+            ],
+            'maxResults' => 30
+        ];
+
+        return $this->postApi($endpoint, $data);
+    }
+
     public function getTicketByKey(string $ticketNumber): array
     {
         $endpoint = sprintf(

@@ -6,11 +6,6 @@ Automization for regular project related tasks - no developer likes.
 ## Usage
 ```bash
 > aijira <COMMAND>
-> aisprintgoals <SPRINT-NAME>
-> aisprintreview <SPRINT-NAME>
-> aiticketvalidator <TICKET-KEY>
-> aiticketinterview <TICKET-KEY>
-> aiticketestimate <TICKET-KEY>
 ```
 
 ## Setup
@@ -36,8 +31,45 @@ The following env parameters need to be configured, depending on CLI commands yo
 - AI_JIRA_BOARD_ID (i.e. 10)
 ## `aisprintreview`
 - AI_GITLAB_URL (i.e. https://gitlab.nxs360.com/)
-- AI_GITLAB_TOKEN
+- AI_GITLAB_TOKEN (i.e. 9s6h...)
 - AI_GITLAB_PROJECT_IDS (i.e. 476,735)
+
+## Examples
+
+### Use OpenAI to generate your sprint goals for a planned or existing sprint.
+```bash
+> aijira sprint:goals "Spryker Sprint 20"
+```
+
+![2023-06-21_1.png](2023-06-21_1.png)
+
+### Use OpenAI to generate a sprint review agenda.
+```bash
+> aijira sprint:review "Spryker Sprint 20"
+```
+
+![2023-06-21_2.png](2023-06-21_2.png)
+
+### Use OpenAI to ask the right questions. (Works best with a Story)
+```bash
+> aijira ticket:ask "SPRY-1262"
+```
+
+![2023-06-21_3.png](2023-06-21_3.png)
+
+### Use OpenAI to get an estimation in hours for a specific.
+```bash
+> aijira ticket:estimate "SPRY-1899"
+```
+
+![2023-06-21_4.png](2023-06-21_4.png)
+
+### Use OpenAI to improve ticket quality.
+```bash
+> aijira ticket:validate "SPRY-661
+```
+
+![2023-06-21_5.png](2023-06-21_5.png)
 
 ## ToDo
 - [x] `aijira-ticket-validate "Ticket No"` Ticket Quality Checker "Ticket NR"
