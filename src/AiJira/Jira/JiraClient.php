@@ -48,9 +48,11 @@ class JiraClient
 
         $boards = $this->getBoards();
         foreach ($boards['values'] as $board) {
-            $sprintsResponse = $this->getSprints($board['id']);
-            $sprints = json_decode($sprintsResponse, true);
+            if ($board['type'] !== 'scrum') {
+                continue;
+            }
 
+            $sprints = $this->getSprints($board['id']);
             if (!isset($sprints['values'])) {
                 continue;
             }
@@ -78,7 +80,10 @@ class JiraClient
 
     private function getBoards(): array
     {
-        $endpoint = getenv('AI_JIRA_URL') . '/rest/agile/1.0/board';
+        $endpoint = sprintf(
+            '%s/rest/agile/1.0/board',
+            getenv('AI_JIRA_URL'),
+        );
         $data = [
             'projectKeyOrId' => getenv('AI_JIRA_PROJECT')
         ];
@@ -86,18 +91,15 @@ class JiraClient
         return $this->getApi($endpoint, $data);
     }
 
-    private function getSprints($boardId): string
+    private function getSprints($boardId): array
     {
-        $endpoint = getenv('AI_JIRA_URL') . '/rest/agile/1.0/board/' . $boardId . '/sprint';
+        $endpoint = sprintf(
+            '%s/rest/agile/1.0/board/%s/sprint',
+            getenv('AI_JIRA_URL'),
+            $boardId
+        );
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $endpoint);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERPWD, getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN'));
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        return $response;
+        return $this->getApi($endpoint);
     }
 
     private function postApi(string $endpoint, array $data = []): ?array
