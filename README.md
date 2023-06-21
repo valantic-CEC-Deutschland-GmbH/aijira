@@ -85,6 +85,6 @@ The following env parameters need to be configured, depending on CLI commands yo
 - [x] `aijira-ticket-interview "Ticket No"` Ticket/Story Interview Questions to productowner (`Liste die Fragen für das Benutzerinterview für das folgende Feature auf: [Feature beschreiben]`)
 - [ ] `aijira-ticket-acceptance-criteria "Ticket No"` Auto ACs
 - [ ] `aijira-ticket-test-cases "Ticket No"` Testcase generator "Ticket NR"
-- [ ] `aijira-gitlab-release-notes "Sprint Name"` Auto release notes gitlab > CHANGELOG-2023-06-15.md
+- [x] `aijira-gitlab-release-notes "Sprint Name"` Auto release notes gitlab > CHANGELOG-2023-06-15.md
 - perfect prompt gpt4 plugin -> improve our prompts
 - [x] symfony console aijira wrapper to for ai commands, its usage and description
