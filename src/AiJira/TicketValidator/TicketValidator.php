@@ -5,26 +5,24 @@ declare(strict_types=1);
 namespace AiJira\TicketValidator;
 
 use AiJira\Jira\JiraClient;
+use AiJira\Jira\JiraFormatter;
 use AiJira\OpenAI\OpenAIClient;
 
 class TicketValidator
 {
-    private JiraClient $jiraClient;
-    private OpenAIClient $openaiClient;
-    private Formatter $formatter;
-
     public function __construct()
     {
         $this->jiraClient = new JiraClient();
+        $this->jiraFormatter = new JiraFormatter();
         $this->openaiClient = new OpenAIClient();
-        $this->formatter = new Formatter();
+        $this->mapper = new Mapper();
     }
 
     public function validateTicketDescription(string $ticketNumber): string
     {
         $ticketData = $this->jiraClient->getTicketByKey($ticketNumber);
-        $formattedTicket = $this->formatter->formatTicketData($ticketData);
-        $ticketFields = $this->formatter->mapTicketTypeFields($formattedTicket['type']);
+        $formattedTicket = $this->jiraFormatter->formatTicketData($ticketData);
+        $ticketFields = $this->mapper->mapTicketTypeFields($formattedTicket['type']);
 
         return $this->openaiClient->getGeneratedTicketDescription($formattedTicket, $ticketFields);
     }

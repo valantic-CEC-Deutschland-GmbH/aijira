@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace AiJira\TicketInterview;
+namespace AiJira\TicketEstimate;
 
 use AiJira\Jira\JiraClient;
 use AiJira\Jira\JiraFormatter;
 use AiJira\OpenAI\OpenAIClient;
 
-class TicketInterview
+class TicketEstimate
 {
     public function __construct()
     {
@@ -17,11 +17,11 @@ class TicketInterview
         $this->openaiClient = new OpenAIClient();
     }
 
-    public function getTicketInterviewQuestions(string $ticketNumber): string
+    public function getTicketEstimation(string $ticketNumber): string
     {
         $ticketData = $this->jiraClient->getTicketByKey($ticketNumber);
-        $formattedTicket = $this->jiraFormatter->formatTicketData($ticketData);
+        $ticketData = $this->jiraFormatter->formatTicketData($ticketData);
 
-        return $this->openaiClient->getGeneratedTicketInterviewQuestions($formattedTicket);
+        return $this->openaiClient->getGeneratedTicketEstimation($ticketData);
     }
 }

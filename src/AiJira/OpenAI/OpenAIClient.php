@@ -89,6 +89,35 @@ class OpenAIClient
         return $this->callApi($endpoint, $data);
     }
 
+    public function getGeneratedTicketEstimation(array $ticket): string
+    {
+        $endpoint = 'https://api.openai.com/v1/chat/completions';
+        $prompt = 'As a developer, I would like to have an estimated time for the provided Jira ticket. Please estimate in hours.
+    Dont come up with excuses, just estimate it.
+      I will use this as a prediction and orientiation.
+        Only return your suggestion, no comments or other texts.
+        You are allowed answer with a range of estimation, if you are not sure about a concrete number.
+        Only return the numbers, no text.
+        JIRA Ticket: ' . json_encode($ticket) . '
+      ';
+
+        $data = [
+            'n' => 1,
+            'temperature' => 0,
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => $prompt,
+                ],
+            ],
+        ];
+
+        $response = $this->callApi($endpoint, $data);
+
+        return str_replace('.', '', $response);
+    }
+
     private function callApi(string $endpoint, array $data): string
     {
         $response = (new Client())->request(

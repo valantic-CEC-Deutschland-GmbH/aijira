@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace AiJira\TicketValidator;
+namespace AiJira\Jira;
 
-class Formatter
+class JiraFormatter
 {
     public function formatTicketData(array $ticket): array
     {
@@ -14,33 +14,27 @@ class Formatter
             $description = $this->formatDescription($fields['description']['content']);
         }
 
+        $labels = implode(',', $fields['labels']);
+
         return [
             'title' => $fields['summary'],
             'description' => $description,
             'type' => $ticket['fields']['issuetype']['name'],
             'fields' => $this->extractCustomFields($fields),
+            'labels' => $labels,
         ];
     }
 
-    public function mapTicketTypeFields(string $ticketType): array
+    public function extractLabels(array $tickets): array
     {
-        return match ($ticketType) {
-            'Bug' => [
-                'Title',
-                'Description',
-                'Environment',
-                'Open questions',
-                'Acceptance criteria',
-                'Details',
-            ],
-            default => [
-                'Title',
-                'Description',
-                'Open questions',
-                'Acceptance criteria',
-                'Details'
-            ]
-        };
+        $formattedLabels = [];
+        foreach ($tickets as $ticket) {
+            array_map(function (string $label) use (&$formattedLabels) {
+                $formattedLabels[] = $label;
+            }, explode(',', $ticket['labels']));
+        }
+
+        return array_unique($formattedLabels);
     }
 
     private function formatDescription(array $descriptionParts): string
