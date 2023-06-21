@@ -20,7 +20,16 @@ class SprintReview
     public function getSprintReviewFromMergeRequestsAndTickets(string $paramSprintName): string
     {
         $ticketData = $this->jiraClient->getTicketsBySprintName($paramSprintName);
+        $tasks = $this->getTasks($ticketData);
+
         $jiraSprint = $this->jiraClient->getSprint($paramSprintName);
+        $mergeRequests = $this->getMergeRequests($jiraSprint);
+
+        return $this->openaiClient->getGeneratedSprintReviewFromMergeRequestsAndTickets($mergeRequests, $tasks, $paramSprintName);
+    }
+
+    private function getMergeRequests(array $jiraSprint): array
+    {
         $startDate = new \DateTimeImmutable($jiraSprint['startDate']);
         $endDate = new \DateTimeImmutable($jiraSprint['endDate']);
 
@@ -29,6 +38,11 @@ class SprintReview
             $mergeRequests = array_merge($mergeRequests, $this->gitLabClient->getMergeRequestsByDateRange($gitlabProjectID, $startDate, $endDate));
         }
 
+        return $mergeRequests;
+    }
+
+    private function getTasks(array $ticketData): array
+    {
         $tasks = [];
         foreach ($ticketData['issues'] as $ticket) {
             if ($ticket['fields']['issuetype']['name'] !== 'Story') {
@@ -36,6 +50,6 @@ class SprintReview
             }
         }
 
-        return $this->openaiClient->getGeneratedSprintReviewFromMergeRequestsAndTickets($mergeRequests, $tasks, $paramSprintName);
+        return $tasks;
     }
 }
