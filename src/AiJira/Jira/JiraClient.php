@@ -42,6 +42,71 @@ class JiraClient
         return $this->getApi($endpoint);
     }
 
+    public function getSprint(string $paramSprintName): array
+    {
+        // Get the list of boards
+        $boardsResponse = $this->getBoards();
+        $boards = json_decode($boardsResponse, true);
+
+        $checkedSprints = [];
+
+        // Iterate through boards
+        foreach ($boards['values'] as $board) {
+            $boardId = $board['id'];
+
+            // Get the list of sprints for each board
+            $sprintsResponse = $this->getSprints($boardId);
+            $sprints = json_decode($sprintsResponse, true);
+
+            if (!isset($sprints['values'])) {
+                continue;
+            }
+            $requestedJiraSprint = [];
+
+            $checkedSprints = array_merge($checkedSprints, $sprints['values']);
+
+            // Process each sprint
+            foreach ($sprints['values'] as $sprint) {
+                if ($sprint['name'] === $paramSprintName) {
+                    $requestedJiraSprint = $sprint;
+                }
+            }
+        }
+
+        if (empty($requestedJiraSprint)) {
+            echo sprintf(
+                "Provided Sprint not found when checking %s. List of valid options: %s",
+                getenv('AI_JIRA_URL'), json_encode(array_map(fn($sprint) => [$sprint['name']], $checkedSprints))
+            );
+            exit(0);
+        }
+
+        return $requestedJiraSprint;
+    }
+
+    private function getBoards(): string
+    {
+        $endpoint = getenv('AI_JIRA_URL') . '/rest/agile/1.0/board?projectKeyOrId=' . getenv('AI_JIRA_PROJECT');
+        return $this->makeCurlRequest($endpoint);
+    }
+
+    private function getSprints($boardId): string
+    {
+        $endpoint = getenv('AI_JIRA_URL') . '/rest/agile/1.0/board/' . $boardId . '/sprint';
+        return $this->makeCurlRequest($endpoint);
+    }
+
+    private function makeCurlRequest($url): string
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERPWD, getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN'));
+        $response = curl_exec($ch);
+        curl_close($ch);
+        return $response;
+    }
+
     private function postApi(string $endpoint, array $data = []): ?array
     {
         try {
@@ -51,7 +116,10 @@ class JiraClient
                 [
                     'headers' => [
                         'Content-Type' => 'application/json',
-                        'Authorization' => 'Basic ' . base64_encode(getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN')),
+                    ],
+                    'auth' => [
+                        getenv('AI_JIRA_EMAIL'),
+                        getenv('AI_JIRA_API_TOKEN')
                     ],
                     'body' => json_encode($data),
                 ]
@@ -73,7 +141,10 @@ class JiraClient
                 [
                     'headers' => [
                         'Content-Type' => 'application/json',
-                        'Authorization' => 'Basic ' . base64_encode(getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN')),
+                    ],
+                    'auth' => [
+                        getenv('AI_JIRA_EMAIL'),
+                        getenv('AI_JIRA_API_TOKEN')
                     ],
                     'query' => $data
                 ]
