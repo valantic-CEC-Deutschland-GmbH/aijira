@@ -106,7 +106,7 @@ $application->add(new class('sprint:goals') extends Command {
 });
 
 
-$application->add(new class('release-notes') extends Command {
+$application->add(new class('sprint:release-notes') extends Command {
     public function __construct(string $name = null)
     {
         parent::__construct($name);

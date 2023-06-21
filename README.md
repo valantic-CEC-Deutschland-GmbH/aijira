@@ -73,7 +73,7 @@ The following env parameters need to be configured, depending on CLI commands yo
 
 ### Use OpenAI to generate your release notes to a given sprint. Its automatically collecting all merge requests.
 ```bash
-> aijira release-notes "Spryker Sprint 20"
+> aijira sprint:release-notes "Spryker Sprint 20"
 ```
 
 ![2023-06-21_20-59.png](2023-06-21_20-59.png)
