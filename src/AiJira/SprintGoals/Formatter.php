@@ -23,7 +23,7 @@ class Formatter
         return [$tasks, $stories];
     }
 
-    public function extractLabels(array $tickets): string
+    public function extractLabels(array $tickets): array
     {
         $formattedLabels = [];
         foreach ($tickets as $ticket) {
@@ -32,7 +32,7 @@ class Formatter
             }, explode(',', $ticket['labels']));
         }
 
-        return implode(', ', array_unique($formattedLabels));
+        return array_unique($formattedLabels);
     }
 
     private function formatTicketData(array $ticket): array

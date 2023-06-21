@@ -26,9 +26,6 @@ class TicketValidator
         $formattedTicket = $this->formatter->formatTicketData($ticketData);
         $ticketFields = $this->formatter->mapTicketTypeFields($formattedTicket['type']);
 
-        return $this->openaiClient->getGeneratedTicketDescription(
-            json_encode($formattedTicket),
-            implode(', ', $ticketFields)
-        );
+        return $this->openaiClient->getGeneratedTicketDescription($formattedTicket, $ticketFields);
     }
 }

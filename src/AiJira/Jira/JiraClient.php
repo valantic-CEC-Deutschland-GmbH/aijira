@@ -39,14 +39,7 @@ class JiraClient
             $ticketNumber
         );
 
-        $data = [
-            'fields' => [
-                'summary',
-                'description',
-            ],
-        ];
-
-        return $this->callApi($endpoint, $data);
+        return $this->callApi($endpoint, []);
     }
 
     private function callApi(string $endpoint, array $data, string $method = 'GET'): ?array

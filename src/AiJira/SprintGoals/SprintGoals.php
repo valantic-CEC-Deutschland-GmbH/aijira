@@ -26,6 +26,6 @@ class SprintGoals
         [$tasks, $stories] = $this->formatter->splitTicketsByType($ticketData);
         $labels = $this->formatter->extractLabels($tasks);
 
-        return $this->openaiClient->getGeneratedSprintGoals(json_encode($tasks), $labels) . "\n\nOverall:\n" . $this->openaiClient->getGeneratedSprintGoals(json_encode($stories));
+        return $this->openaiClient->getGeneratedSprintGoals($tasks, $labels) . "\n\nOverall:\n" . $this->openaiClient->getGeneratedSprintGoals($stories);
     }
 }

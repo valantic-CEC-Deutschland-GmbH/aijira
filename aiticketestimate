@@ -11,7 +11,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 
 $ticketNumber = $_SERVER['argv'][1] ?? null;
 if ($ticketNumber === null) {
-    echo "Please enter a valid ticket number. \nExample:\n> aiticketvalidator \"SPRY-1234\"";
+    echo "Please enter a valid ticket number. \nExample:\n> aiticketestimate \"SPRY-1234\"";
     exit(0);
 }
 
@@ -61,6 +61,6 @@ function getTicketEstimation(array $ticket): string
 }
 
 $ticketData = (new JiraClient())->getTicketByKey($ticketNumber);
-$ticketData = (new Formatter())->extractTicketText($ticketData);
+$ticketData = (new Formatter())->formatTicketData($ticketData);
 
 echo getTicketEstimation($ticketData);

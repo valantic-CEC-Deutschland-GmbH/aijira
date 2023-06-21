@@ -6,54 +6,6 @@ namespace AiJira\TicketValidator;
 
 class Formatter
 {
-    public function extractTicketText(array $ticket): array
-    {
-        $ticket = $this->formatTicketData($ticket);
-
-        $newArray = array();
-
-        // Extract title
-        $newArray['title'] = $ticket['title'];
-
-        // Extract description
-        $newArray['description'] = $ticket['description'];
-
-        // Extract fields
-        $fields = $ticket['fields'];
-
-        foreach ($fields as $fieldKey => $fieldValue) {
-            if (is_array($fieldValue) && isset($fieldValue['content'])) {
-                // Extract text from the field value
-                $newArray[$fieldKey] = $this->extractTextFromContent($fieldValue['content']);
-            }
-        }
-
-        return $newArray;
-    }
-
-    private function extractTextFromContent($content) {
-        $textArray = array();
-
-        foreach ($content as $item) {
-            if (isset($item['content'])) {
-                // Recursively extract text from nested content
-                $nestedText = $this->extractTextFromContent($item['content']);
-
-                // Merge nested text with the current text array
-                $textArray = array_merge($textArray, $nestedText);
-            } elseif (isset($item['text'])) {
-                // Extract text from the item
-                $textArray[] = $item['text'];
-            }
-
-            // You can add more conditions for other item types if needed
-
-            // Otherwise, skip the item
-        }
-
-        return $textArray;
-    }
-
     public function formatTicketData(array $ticket): array
     {
         $description = '';
