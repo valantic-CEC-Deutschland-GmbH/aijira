@@ -1,8 +1,6 @@
 #!/usr/bin/php
 <?php
 
-use AiJira\Jira\JiraClient;use AiJira\TicketValidator\Formatter;
-
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require __DIR__ . '/vendor/autoload.php';
 } else {
@@ -11,56 +9,9 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 
 $ticketNumber = $_SERVER['argv'][1] ?? null;
 if ($ticketNumber === null) {
-    echo "Please enter a valid ticket number. \nExample:\n> aiticketvalidator \"SPRY-1234\"";
+    echo "Please enter a valid ticket number. \nExample:\n> aiticketestimate \"SPRY-1234\"";
     exit(0);
 }
 
-function getTicketEstimation(array $ticket): string
-{
-    $prompt = 'As a developer, I would like to have an estimated time for the provided Jira ticket. Please estimate in hours.
-    Dont come up with excuses, just estimate it.
-      I will use this as a prediction and orientiation.
-        Only return your suggestion, no comments or other texts.
-        You are allowed answer with a range of estimation, if you are not sure about a concrete number.
-        Only return the numbers, no text.
-        JIRA Ticket: '.json_encode($ticket).'
-      ';
-    $openAiKey = getenv('OPENAI_KEY');
-    $endpoint = 'https://api.openai.com/v1/chat/completions';
-
-    $data = [
-        'n' => 1,
-        'temperature' => 0,
-        'model' => 'gpt-3.5-turbo',
-        'messages' => [
-            [
-                'role' => 'system',
-                'content' => $prompt,
-            ],
-        ],
-    ];
-
-    $headers = [
-        'Content-Type: application/json',
-        'Authorization: Bearer ' . $openAiKey,
-    ];
-
-    $ch = curl_init($endpoint);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $response = curl_exec($ch);
-    curl_close($ch);
-
-    $responseData = json_decode($response, true);
-    $message = $responseData['choices'][0]['message']['content'];
-
-    return str_replace('.', '', $message);
-}
-
-$ticketData = (new JiraClient())->getTicketByKey($ticketNumber);
-$ticketData = (new Formatter())->extractTicketText($ticketData);
-
-echo getTicketEstimation($ticketData);
+$ticketEstimate = new \AiJira\TicketEstimate\TicketEstimate();
+echo $ticketEstimate->getTicketEstimation($ticketNumber);
