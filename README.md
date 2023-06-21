@@ -57,7 +57,7 @@ The following env parameters need to be configured, depending on CLI commands yo
 
 ![2023-06-21_3.png](2023-06-21_3.png)
 
-### Use OpenAI to get an estimation in hours for a specific.
+### Use OpenAI to get an estimation in hours for a specific task.
 ```bash
 > aijira ticket:estimate "SPRY-1899"
 ```
