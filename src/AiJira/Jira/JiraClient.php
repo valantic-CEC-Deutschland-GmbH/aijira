@@ -27,7 +27,7 @@ class JiraClient
             ],
         ];
 
-        return $this->callApi($endpoint, $data, 'POST');
+        return $this->postApi($endpoint, $data);
     }
 
     public function getTicketByKey(string $ticketNumber): array
@@ -39,14 +39,14 @@ class JiraClient
             $ticketNumber
         );
 
-        return $this->callApi($endpoint, []);
+        return $this->getApi($endpoint);
     }
 
-    private function callApi(string $endpoint, array $data, string $method = 'GET'): ?array
+    private function postApi(string $endpoint, array $data = []): ?array
     {
         try {
             $response = (new Client())->request(
-                $method,
+                'POST',
                 $endpoint,
                 [
                     'headers' => [
@@ -54,6 +54,28 @@ class JiraClient
                         'Authorization' => 'Basic ' . base64_encode(getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN')),
                     ],
                     'body' => json_encode($data),
+                ]
+            );
+        } catch (\Exception $e) {
+            echo "Error while fetching jira data \n" . $e->getMessage();
+            exit;
+        }
+
+        return json_decode((string)$response->getBody(), true);
+    }
+
+    private function getApi(string $endpoint, array $data = []): ?array
+    {
+        try {
+            $response = (new Client())->request(
+                'GET',
+                $endpoint,
+                [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Authorization' => 'Basic ' . base64_encode(getenv('AI_JIRA_EMAIL') . ':' . getenv('AI_JIRA_API_TOKEN')),
+                    ],
+                    'query' => $data
                 ]
             );
         } catch (\Exception $e) {
