@@ -16,25 +16,20 @@ class JiraFormatter
 
         $labels = implode(',', $fields['labels']);
 
-        return [
+        $formattedTicketData = [
             'title' => $fields['summary'],
             'description' => $description,
             'type' => $ticket['fields']['issuetype']['name'],
             'fields' => $this->extractCustomFields($fields),
             'labels' => $labels,
         ];
-    }
-
-    public function extractLabels(array $tickets): array
-    {
-        $formattedLabels = [];
-        foreach ($tickets as $ticket) {
-            array_map(function (string $label) use (&$formattedLabels) {
-                $formattedLabels[] = $label;
-            }, explode(',', $ticket['labels']));
+        foreach ($formattedTicketData['fields'] as $key => $value) {
+            if (trim($value) === '.') {
+                $formattedTicketData['fields'][$key] = 'N/A';
+            }
         }
 
-        return array_unique($formattedLabels);
+        return $formattedTicketData;
     }
 
     private function formatDescription(array $descriptionParts): string
@@ -86,5 +81,17 @@ class JiraFormatter
         }
 
         return $result;
+    }
+
+    public function extractLabels(array $tickets): array
+    {
+        $formattedLabels = [];
+        foreach ($tickets as $ticket) {
+            array_map(function (string $label) use (&$formattedLabels) {
+                $formattedLabels[] = $label;
+            }, explode(',', $ticket['labels']));
+        }
+
+        return array_unique($formattedLabels);
     }
 }

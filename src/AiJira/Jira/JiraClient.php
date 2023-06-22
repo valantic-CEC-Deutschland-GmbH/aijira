@@ -53,6 +53,17 @@ class JiraClient
         return $this->postApi($endpoint, $data);
     }
 
+    public function getFields(): array
+    {
+        $endpoint = sprintf(
+            '%s%s',
+            getenv('AI_JIRA_URL'),
+            '/rest/api/3/field/',
+        );
+
+        return $this->getApi($endpoint);
+    }
+
     public function getTicketByKey(string $ticketNumber): array
     {
         $endpoint = sprintf(
