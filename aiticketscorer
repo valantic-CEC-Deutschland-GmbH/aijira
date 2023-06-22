@@ -13,5 +13,5 @@ if ($ticketNumber === null) {
     exit(0);
 }
 
-$ticketValidator = new AiJira\TicketTestCaseCreator\TicketTestCaseCreator();
-echo $ticketValidator->createTicketTestCases($ticketNumber);
+$ticketScorer = new AiJira\TicketScorer\TicketScorer();
+echo $ticketScorer->scoreTicket($ticketNumber);

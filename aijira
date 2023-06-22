@@ -33,6 +33,42 @@ $application->add(new class('ticket:validate') extends Command {
     }
 });
 
+$application->add(new class('ticket:score') extends Command {
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+        $this->setDescription('Use OpenAI to score a given ticket for its completeness & quality on a scale between 1 and 10.');
+        $this->addArgument('ticket-no', InputArgument::REQUIRED, 'JIRA Ticket Number');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $command = 'aiticketscorer "'.$input->getArgument('ticket-no').'"';
+        exec($command, $outputBuffer);
+        array_map([$output, 'writeln'], $outputBuffer);
+
+        return Command::SUCCESS;
+    }
+});
+
+$application->add(new class('ticket:test-cases') extends Command {
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+        $this->setDescription('Use OpenAI to write test-cases for a given ticket.');
+        $this->addArgument('ticket-no', InputArgument::REQUIRED, 'JIRA Ticket Number');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $command = 'aitickettestcases "'.$input->getArgument('ticket-no').'"';
+        exec($command, $outputBuffer);
+        array_map([$output, 'writeln'], $outputBuffer);
+
+        return Command::SUCCESS;
+    }
+});
+
 $application->add(new class('ticket:estimate') extends Command {
     public function __construct(string $name = null)
     {

@@ -10,7 +10,9 @@
       "aireleasenotes",
       "aiticketestimate",
       "aiticketinterview",
-      "aiticketvalidator"
+      "aiticketvalidator",
+      "aiticketscorer",
+      "aitickettestcases",
     ],
     "authors": [
         {

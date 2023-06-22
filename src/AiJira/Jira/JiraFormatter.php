@@ -24,7 +24,7 @@ class JiraFormatter
             'labels' => $labels,
         ];
         foreach ($formattedTicketData['fields'] as $key => $value) {
-            if (trim($value) === '.') {
+            if (in_array(trim($value), ['.', '-'], true)) {
                 $formattedTicketData['fields'][$key] = 'N/A';
             }
         }
