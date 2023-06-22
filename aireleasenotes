@@ -9,9 +9,9 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 
 $paramSprintName = $_SERVER['argv'][1] ?? null;
 if ($paramSprintName === null) {
-    echo "Please enter a valid sprint name. \nExample:\n> aisprintreview \"Spryker Sprint 20\"";
+    echo "Please enter a valid sprint name. \nExample:\n> aireleasenotes \"Spryker Sprint 20\"";
     exit(0);
 }
 
-$sprintReview = new \AiJira\ReleaseNotes\ReleaseNotes();
-echo $sprintReview->getReleaseNotesromMergeRequests($paramSprintName);
+$releaseNotes = new \AiJira\ReleaseNotes\ReleaseNotes();
+echo $releaseNotes->getReleaseNotesFromMergeRequests($paramSprintName);

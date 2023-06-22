@@ -1,7 +1,7 @@
 # aijira
 Automization for regular project related tasks - no developer likes.
 
-![2023-06-20_22-41.png](2023-06-20_22-41.png)
+![2023-06-20_22-41.png](assets/2023-06-20_22-41.png)
 
 ## Usage
 ```bash
@@ -29,7 +29,7 @@ The following env parameters need to be configured, depending on CLI commands yo
 - AI_JIRA_URL (i.e. https://lr4digital.atlassian.net/)
 - AI_JIRA_PROJECT (i.e. SPRY)
 - AI_JIRA_BOARD_ID (i.e. 10)
-## `aisprintreview`
+## `aisprintreview, aireleasenotes`
 - AI_GITLAB_URL (i.e. https://gitlab.nxs360.com/)
 - AI_GITLAB_TOKEN (i.e. 9s6h...)
 - AI_GITLAB_PROJECT_IDS (i.e. 476,735)
@@ -41,42 +41,42 @@ The following env parameters need to be configured, depending on CLI commands yo
 > aijira sprint:goals "Spryker Sprint 20"
 ```
 
-![2023-06-21_1.png](2023-06-21_1.png)
+![2023-06-21_1.png](assets/2023-06-21_1.png)
 
 ### Use OpenAI to generate a sprint review agenda.
 ```bash
 > aijira sprint:review "Spryker Sprint 20"
 ```
 
-![2023-06-21_2.png](2023-06-21_2.png)
+![2023-06-21_2.png](assets/2023-06-21_2.png)
 
 ### Use OpenAI to ask the right questions. (Works best with a Story)
 ```bash
 > aijira ticket:ask "SPRY-1262"
 ```
 
-![2023-06-21_3.png](2023-06-21_3.png)
+![2023-06-21_3.png](assets/2023-06-21_3.png)
 
 ### Use OpenAI to get an estimation in hours for a specific task.
 ```bash
 > aijira ticket:estimate "SPRY-1899"
 ```
 
-![2023-06-21_4.png](2023-06-21_4.png)
+![2023-06-21_4.png](assets/2023-06-21_4.png)
 
 ### Use OpenAI to improve ticket quality.
 ```bash
 > aijira ticket:validate "SPRY-661"
 ```
 
-![2023-06-21_5.png](2023-06-21_5.png)
+![2023-06-21_5.png](assets/2023-06-21_5.png)
 
 ### Use OpenAI to generate your release notes to a given sprint. Its automatically collecting all merge requests.
 ```bash
 > aijira sprint:release-notes "Spryker Sprint 20"
 ```
 
-![2023-06-21_20-59.png](2023-06-21_20-59.png)
+![2023-06-21_20-59.png](assets/2023-06-21_20-59.png)
 
 ## ToDo
 - [x] `aijira-ticket-validate "Ticket No"` Ticket Quality Checker "Ticket NR"

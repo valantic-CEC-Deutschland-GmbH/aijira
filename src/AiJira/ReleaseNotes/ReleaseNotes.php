@@ -17,7 +17,7 @@ class ReleaseNotes
         $this->gitLabClient = new GitLabClient();
     }
 
-    public function getReleaseNotesromMergeRequests(string $paramSprintName): string
+    public function getReleaseNotesFromMergeRequests(string $paramSprintName): string
     {
         $jiraSprint = $this->jiraClient->getSprint($paramSprintName);
         $mergeRequests = $this->getMergeRequests($jiraSprint);
