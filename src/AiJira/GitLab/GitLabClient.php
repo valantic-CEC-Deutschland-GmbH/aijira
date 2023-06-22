@@ -40,11 +40,22 @@ class GitLabClient
 
         $filteredMergeRequests = [];
         foreach ($mergeRequests as $entry) {
-            $author = $entry['author']['username'];
+            $author = $this->anonString($entry['author']['username']);
             $filteredMergeRequests[$author][] = ['author' => $author, 'title' => $entry['title']];
         }
 
         return $filteredMergeRequests;
+    }
+
+    private function anonString($string)
+    {
+        $length = strlen($string);
+
+        for ($i = 1; $i < $length; $i += 2) {
+            $string[$i] = '*';
+        }
+
+        return $string;
     }
 
     private function getApi(string $endpoint, array $data = []): ?array
