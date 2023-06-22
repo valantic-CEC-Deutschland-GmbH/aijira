@@ -4,7 +4,7 @@
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require __DIR__ . '/vendor/autoload.php';
 } else {
-    require_once(__DIR__ . '/../../autoload.php');
+    require_once(__DIR__ . '/..autoload.php');
 }
 
 use Symfony\Component\Console\Application;
@@ -26,7 +26,7 @@ $application->add(new class('ticket:validate') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = ['./aiticketvalidator', $input->getArgument('ticket-no')];
+        $command = ['aiticketvalidator', $input->getArgument('ticket-no')];
         $process = new Process($command);
         $process->setTty(true);
         $process->run();
@@ -46,7 +46,7 @@ $application->add(new class('ticket:score') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = ['./aiticketscorer', $input->getArgument('ticket-no')];
+        $command = ['aiticketscorer', $input->getArgument('ticket-no')];
         $process = new Process($command);
         $process->setTty(true);
         $process->run();
@@ -66,7 +66,7 @@ $application->add(new class('ticket:test-cases') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = ['./aitickettestcases', $input->getArgument('ticket-no')];
+        $command = ['aitickettestcases', $input->getArgument('ticket-no')];
         $process = new Process($command);
         $process->setTty(true);
         $process->run();
@@ -86,7 +86,7 @@ $application->add(new class('ticket:estimate') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = ['./aiticketestimate', $input->getArgument('ticket-no')];
+        $command = ['aiticketestimate', $input->getArgument('ticket-no')];
         $process = new Process($command);
         $process->setTty(true);
         $process->run();
@@ -106,7 +106,7 @@ $application->add(new class('ticket:ask') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = ['./aiticketinterview', $input->getArgument('ticket-no')];
+        $command = ['aiticketinterview', $input->getArgument('ticket-no')];
         $process = new Process($command);
         $process->setTty(true);
         $process->run();
@@ -126,7 +126,7 @@ $application->add(new class('ticket:test-cases') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = ['./aitickettestcases', $input->getArgument('ticket-no')];
+        $command = ['aitickettestcases', $input->getArgument('ticket-no')];
         $process = new Process($command);
         $process->setTty(true);
         $process->run();
@@ -146,7 +146,7 @@ $application->add(new class('sprint:review') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = ['./aisprintreview', $input->getArgument('sprint-name')];
+        $command = ['aisprintreview', $input->getArgument('sprint-name')];
         $process = new Process($command);
         $process->setTty(true);
         $process->run();
@@ -166,7 +166,7 @@ $application->add(new class('sprint:goals') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = ['./aisprintgoals', $input->getArgument('sprint-name')];
+        $command = ['aisprintgoals', $input->getArgument('sprint-name')];
         $process = new Process($command);
         $process->setTty(true);
         $process->run();
@@ -187,7 +187,7 @@ $application->add(new class('sprint:release-notes') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = ['./aireleasenotes', $input->getArgument('sprint-name')];
+        $command = ['aireleasenotes', $input->getArgument('sprint-name')];
         $process = new Process($command);
         $process->setTty(true);
         $process->run();
