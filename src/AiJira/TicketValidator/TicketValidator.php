@@ -67,7 +67,7 @@ class TicketValidator
         ];
 
         $differ = new Differ(explode("\n", $old), explode("\n", $new), $differOptions);
-        $renderer = RendererFactory::make($rendererName, $rendererOptions); // or your own renderer object
+        $renderer = RendererFactory::make($rendererName, $rendererOptions);
 
         return $renderer->render($differ);
     }
