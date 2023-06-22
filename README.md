@@ -1,7 +1,7 @@
 # aijira
 Automization for regular project related tasks - no developer likes.
 
-![2023-06-20_22-41.png](assets/2023-06-20_22-41.png)
+![2023-06-22_0.png](2023-06-22_0.png)
 
 ## Usage
 ```bash

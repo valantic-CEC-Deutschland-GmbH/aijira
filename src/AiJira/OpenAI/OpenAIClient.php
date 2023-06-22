@@ -88,6 +88,27 @@ class OpenAIClient
         return $this->callApi($endpoint, $data);
     }
 
+    public function getGeneratedTicketTestcases(array $ticket): string
+    {
+        $endpoint = 'https://api.openai.com/v1/chat/completions';
+        $prompt = 'Given the field data of a Jira ticket, your task is to write the following test-cases. Test-cases of type "concrete" that are extract from the Jira field data or are based on the Jira field data. Test cases of type "suggestion" which are recommended for this kind of issue based on the content Jira fields but don\'t repeat concrete test-cases. Return your response as an JSON array where each entry should contain the properties description, acceptanceCriteria & type. Jira Ticket: ' . json_encode($ticket) . '
+      ';
+
+        $data = [
+            'n' => 1,
+            'temperature' => 0,
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => $prompt,
+                ],
+            ],
+        ];
+
+        return $this->callApi($endpoint, $data);
+    }
+
     public function getGeneratedTicketEstimation(array $ticket, array $tickets): string
     {
         $endpoint = 'https://api.openai.com/v1/chat/completions';
