@@ -32,6 +32,18 @@ class JiraFormatter
         return $formattedTicketData;
     }
 
+    public function extractLabels(array $tickets): array
+    {
+        $formattedLabels = [];
+        foreach ($tickets as $ticket) {
+            array_map(function (string $label) use (&$formattedLabels) {
+                $formattedLabels[] = $label;
+            }, explode(',', $ticket['labels']));
+        }
+
+        return array_unique($formattedLabels);
+    }
+
     private function formatDescription(array $descriptionParts): string
     {
         $description = '';
@@ -81,17 +93,5 @@ class JiraFormatter
         }
 
         return $result;
-    }
-
-    public function extractLabels(array $tickets): array
-    {
-        $formattedLabels = [];
-        foreach ($tickets as $ticket) {
-            array_map(function (string $label) use (&$formattedLabels) {
-                $formattedLabels[] = $label;
-            }, explode(',', $ticket['labels']));
-        }
-
-        return array_unique($formattedLabels);
     }
 }

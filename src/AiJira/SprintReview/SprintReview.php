@@ -15,41 +15,17 @@ class SprintReview
         $this->jiraClient = new JiraClient();
         $this->openaiClient = new OpenAIClient();
         $this->gitLabClient = new GitLabClient();
+        $this->mapper = new Mapper();
     }
 
     public function getSprintReviewFromMergeRequestsAndTickets(string $paramSprintName): string
     {
-        $ticketData = $this->jiraClient->getTicketsBySprintName($paramSprintName);
-        $tasks = $this->getTasks($ticketData);
+        $ticketData = $this->jiraClient->getTasksBySprintName($paramSprintName);
+        $tasks = $this->mapper->mapTaskFields($ticketData);
 
         $jiraSprint = $this->jiraClient->getSprint($paramSprintName);
-        $mergeRequests = $this->getMergeRequests($jiraSprint);
+        $mergeRequests = $this->gitLabClient->getMergeRequestsForJiraSprint($jiraSprint);
 
         return $this->openaiClient->getGeneratedSprintReviewFromMergeRequestsAndTickets($mergeRequests, $tasks, $paramSprintName);
-    }
-
-    private function getMergeRequests(array $jiraSprint): array
-    {
-        $startDate = new \DateTimeImmutable($jiraSprint['startDate']);
-        $endDate = new \DateTimeImmutable($jiraSprint['endDate']);
-
-        $mergeRequests = [];
-        foreach (explode(',', getenv('AI_GITLAB_PROJECT_IDS')) as $gitlabProjectID) {
-            $mergeRequests = array_merge($mergeRequests, $this->gitLabClient->getMergeRequestsByDateRange($gitlabProjectID, $startDate, $endDate));
-        }
-
-        return $mergeRequests;
-    }
-
-    private function getTasks(array $ticketData): array
-    {
-        $tasks = [];
-        foreach ($ticketData['issues'] as $ticket) {
-            if ($ticket['fields']['issuetype']['name'] !== 'Story') {
-                $tasks[$ticket['key']] = ['title' => $ticket['fields']['summary'], 'estimation' => $ticket['fields']['timetracking']['originalEstimate']];
-            }
-        }
-
-        return $tasks;
     }
 }

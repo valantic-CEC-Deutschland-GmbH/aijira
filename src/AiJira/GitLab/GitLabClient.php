@@ -8,15 +8,26 @@ use GuzzleHttp\Client;
 
 class GitLabClient
 {
-    public function getMergeRequestsByDateRange(string $gitlabProjectId, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate): array
+    public function getMergeRequestsForJiraSprint(array $jiraSprint): array
     {
-        $url = getenv('AI_GITLAB_URL') . 'api/v4/projects/' . $gitlabProjectId . '/merge_requests';
+        $startDate = new \DateTimeImmutable($jiraSprint['startDate']);
+        $endDate = new \DateTimeImmutable($jiraSprint['endDate']);
 
-        $blacklist = [
-//            'nxs_schoenfeld',
-//            'dominik_baehr',
-        ];
+        $mergeRequests = [];
+        foreach (explode(',', getenv('AI_GITLAB_PROJECT_IDS')) as $gitlabProjectID) {
+            $mergeRequests = array_merge($mergeRequests, $this->getMergeRequestsByDateRange($gitlabProjectID, $startDate, $endDate));
+        }
 
+        return $mergeRequests;
+    }
+
+    private function getMergeRequestsByDateRange(string $gitlabProjectId, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate): array
+    {
+        $url = sprintf(
+            '%sapi/v4/projects/%s/merge_requests',
+            getenv('AI_GITLAB_URL'),
+            $gitlabProjectId
+        );
         $data = [
             'updated_before' => $endDate->format('Y-m-d\T00:00:00\Z'),
             'updated_after' => $startDate->format('Y-m-d\T00:00:00\Z'),
@@ -30,9 +41,7 @@ class GitLabClient
         $filteredMergeRequests = [];
         foreach ($mergeRequests as $entry) {
             $author = $entry['author']['username'];
-            if (!in_array($author, $blacklist, true)) {
-                $filteredMergeRequests[$author][] = ['author' => $author, 'title' => $entry['title']];
-            }
+            $filteredMergeRequests[$author][] = ['author' => $author, 'title' => $entry['title']];
         }
 
         return $filteredMergeRequests;

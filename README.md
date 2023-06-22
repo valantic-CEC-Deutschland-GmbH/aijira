@@ -1,7 +1,7 @@
 # aijira
 Automization for regular project related tasks - no developer likes.
 
-![2023-06-22_0.png](2023-06-22_0.png)
+![2023-06-22_0.png](assets/2023-06-22_0.png)
 
 ## Usage
 ```bash
@@ -83,7 +83,7 @@ The following env parameters need to be configured, depending on CLI commands yo
 > aijira ticket:test-cases "Spryker Sprint 20"
 ```
 
-![2023-06-22_11.png](2023-06-22_11.png)
+![2023-06-22_11.png](assets/2023-06-22_11.png)
 
 ## ToDo
 None, code is perfect ;)
