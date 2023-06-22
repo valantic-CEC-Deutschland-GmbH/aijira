@@ -42,7 +42,7 @@ class OpenAIClient
     {
         $endpoint = 'https://api.openai.com/v1/chat/completions';
         $prompt = sprintf(
-            'Given the field data of a Jira ticket, your task is to enhance the wording of the ticket and provide revised versions of the fields %s. Please exclude any comments or extraneous text from your response.',
+            'Given the field data of a Jira ticket, your task is to enhance the wording of the ticket and provide revised versions of the fields %s. Please exclude any comments or extraneous text from your response. Return your response by updating the given field data of the jira ticket.',
             '"' . implode(', ', $fields) . '"'
         );
 
