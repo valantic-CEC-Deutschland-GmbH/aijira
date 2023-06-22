@@ -78,13 +78,12 @@ The following env parameters need to be configured, depending on CLI commands yo
 
 ![2023-06-21_20-59.png](assets/2023-06-21_20-59.png)
 
+### Use OpenAI to generate your release notes to a given sprint. Its automatically collecting all merge requests.
+```bash
+> aijira ticket:test-cases "Spryker Sprint 20"
+```
+
+![2023-06-22_11.png](2023-06-22_11.png)
+
 ## ToDo
-- [x] `aijira-ticket-validate "Ticket No"` Ticket Quality Checker "Ticket NR"
-- [x] `aijira-ticket-estimate "Ticket No"` Automatische Estimations (Only Tasks)
-- [x] `aijira-sprint-review-generate "Sprint Name"` Sprint Review Ticket List generator "DateRange"
-- [x] `aijira-ticket-interview "Ticket No"` Ticket/Story Interview Questions to productowner (`Liste die Fragen für das Benutzerinterview für das folgende Feature auf: [Feature beschreiben]`)
-- [ ] `aijira-ticket-acceptance-criteria "Ticket No"` Auto ACs
-- [ ] `aijira-ticket-test-cases "Ticket No"` Testcase generator "Ticket NR"
-- [x] `aijira-gitlab-release-notes "Sprint Name"` Auto release notes gitlab > CHANGELOG-2023-06-15.md
-- perfect prompt gpt4 plugin -> improve our prompts
-- [x] symfony console aijira wrapper to for ai commands, its usage and description
+None, code is perfect ;)
