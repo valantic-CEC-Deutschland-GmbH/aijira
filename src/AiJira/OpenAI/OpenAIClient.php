@@ -42,9 +42,55 @@ class OpenAIClient
     {
         $endpoint = 'https://api.openai.com/v1/chat/completions';
         $prompt = sprintf(
-            'Given the field data of a Jira ticket, your task is to enhance the wording of the ticket and provide revised versions of the fields %s. Please exclude any comments or extraneous text from your response. Return your response by updating the given field data of the jira ticket.',
+            'Given the field data of a Jira ticket, your task is to enhance the wording of the ticket and provide revised versions of the fields %s. Please exclude any comments or extraneous text from your response. When no information is available for a field its content should be equal to "N/A". Return your response by updating the given field data of the jira ticket.',
             '"' . implode(', ', $fields) . '"'
         );
+
+        $data = [
+            'temperature' => 0,
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => $prompt,
+                ],
+                [
+                    'role' => 'user',
+                    'content' => json_encode($ticketData),
+                ],
+            ],
+        ];
+
+        return $this->callApi($endpoint, $data);
+    }
+
+    public function getGeneratedTicketScoring(array $ticketData): string
+    {
+        $endpoint = 'https://api.openai.com/v1/chat/completions';
+        $prompt = 'Given the field data of a Jira ticket, your task is to rate the completeness & quality of the ticket on a scale between 1 and 10. Also provide suggestions improvements to increase the rating. Return your response only as a JSON array where each entry contains the properties "type" ("completeness", "quality", "comprehensibility"), "rating" and "suggestionsForImprovements" where each array-entry contains a string. Don\'t provide any explanation.';
+
+        $data = [
+            'temperature' => 0,
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => $prompt,
+                ],
+                [
+                    'role' => 'user',
+                    'content' => json_encode($ticketData),
+                ],
+            ],
+        ];
+
+        return $this->callApi($endpoint, $data);
+    }
+
+    public function getGeneratedTestCases(array $ticketData): string
+    {
+        $endpoint = 'https://api.openai.com/v1/chat/completions';
+        $prompt = 'Given the field data of a Jira ticket, your task is to write the following test-cases. Test-cases of type "concrete" that are extract from the Jira field data or are based on the Jira field data. Test cases of type "suggestion" which are recommended for this kind of issue based on the content Jira fields but don\'t repeat concrete test-cases. Return your response as an JSON array where each entry should contain the properties description, acceptanceCriteria & type ("concrete" or "suggestion").';
 
         $data = [
             'temperature' => 0,

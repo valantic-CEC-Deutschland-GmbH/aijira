@@ -63,7 +63,6 @@ class TicketValidator
             'language' => 'eng',
             'lineNumbers' => false,
             'separateBlock' => true,
-            'wrapper-class' => ['diff-side-by-side']
         ];
 
         $differ = new Differ(explode("\n", $old), explode("\n", $new), $differOptions);

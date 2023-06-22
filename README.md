@@ -64,12 +64,26 @@ The following env parameters need to be configured, depending on CLI commands yo
 
 ![2023-06-21_4.png](assets/2023-06-21_4.png)
 
-### Use OpenAI to improve ticket quality.
+### Use OpenAI to score the ticket.
 ```bash
-> aijira ticket:validate "SPRY-661"
+> aijira ticket:score "ND-43"
 ```
 
-![2023-06-21_5.png](assets/2023-06-21_5.png)
+![screenshot-ticket-score.png](assets/screenshot-ticket-score.png)
+
+### Use OpenAI to improve ticket quality.
+```bash
+> aijira ticket:validate "ND-43"
+```
+
+![screenshot-ticket-validate.png](assets/screenshot-ticket-validate.png)
+
+### Use OpenAI to generate test-cases
+```bash
+> aijira ticket:test-cases "ND-43"
+```
+
+![screenshot-ticket-test-cases.png](assets/screenshot-ticket-test-cases.png)
 
 ### Use OpenAI to generate your release notes to a given sprint. Its automatically collecting all merge requests.
 ```bash

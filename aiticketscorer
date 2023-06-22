@@ -1,0 +1,17 @@
+#!/usr/bin/php
+<?php
+
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require __DIR__ . '/vendor/autoload.php';
+} else {
+    require_once(__DIR__ . '/../../autoload.php');
+}
+
+$ticketNumber = $_SERVER['argv'][1] ?? null;
+if ($ticketNumber === null) {
+    echo "Please enter a valid ticket number. \nExample:\n> aiticketvalidator \"SPRY-1234\"";
+    exit(0);
+}
+
+$ticketScorer = new AiJira\TicketScorer\TicketScorer();
+echo $ticketScorer->scoreTicket($ticketNumber);
