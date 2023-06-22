@@ -64,9 +64,9 @@ The following env parameters need to be configured, depending on CLI commands yo
 
 ![2023-06-21_4.png](assets/2023-06-21_4.png)
 
-### Use OpenAI to score the ticket.
+### Use OpenAI to score a given ticket for its completeness & quality on a scale between 1 and 10.
 ```bash
-> aijira ticket:score "ND-43"
+> aijira ticket:score "<TICKET-NR>"
 ```
 
 ![screenshot-ticket-score.png](assets/screenshot-ticket-score.png)

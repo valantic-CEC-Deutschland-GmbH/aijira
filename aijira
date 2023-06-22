@@ -37,7 +37,7 @@ $application->add(new class('ticket:score') extends Command {
     public function __construct(string $name = null)
     {
         parent::__construct($name);
-        $this->setDescription('Use OpenAI to score a given ticket.');
+        $this->setDescription('Use OpenAI to score a given ticket for its completeness & quality on a scale between 1 and 10.');
         $this->addArgument('ticket-no', InputArgument::REQUIRED, 'JIRA Ticket Number');
     }
 
