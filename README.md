@@ -78,7 +78,7 @@ The following env parameters need to be configured, depending on CLI commands yo
 
 ![2023-06-21_20-59.png](assets/2023-06-21_20-59.png)
 
-### Use OpenAI to generate your release notes to a given sprint. Its automatically collecting all merge requests.
+### Use OpenAI to generate testcases that allow manual check if ticket requirements are implemented correctly.
 ```bash
 > aijira ticket:test-cases "Spryker Sprint 20"
 ```
