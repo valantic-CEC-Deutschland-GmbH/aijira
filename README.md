@@ -26,7 +26,7 @@ The following env parameters need to be configured, depending on CLI commands yo
 ## `aisprintgoals, aiticketvalidator, aiticketestimate, aiticketinterview`
 - AI_JIRA_EMAIL (i.e. schoenfeld@nexus-netsoft.com)
 - AI_JIRA_API_TOKEN (i.e. ATATT3xF...)
-- AI_JIRA_URL (i.e. https://lr4digital.atlassian.net/)
+- AI_JIRA_URL (i.e. https://nexus-netsoft.atlassian.net/)
 - AI_JIRA_PROJECT (i.e. SPRY)
 - AI_JIRA_BOARD_ID (i.e. 10)
 ## `aisprintreview, aireleasenotes`
@@ -38,49 +38,49 @@ The following env parameters need to be configured, depending on CLI commands yo
 
 ### Use OpenAI to generate your sprint goals for a planned or existing sprint.
 ```bash
-> aijira sprint:goals "Spryker Sprint 20"
+> aijira sprint:goals "<SPRINT-NAME>"
 ```
 
 ![2023-06-21_1.png](assets/2023-06-21_1.png)
 
 ### Use OpenAI to generate a sprint review agenda.
 ```bash
-> aijira sprint:review "Spryker Sprint 20"
+> aijira sprint:review "<SPRINT-NAME>"
 ```
 
 ![2023-06-21_2.png](assets/2023-06-21_2.png)
 
 ### Use OpenAI to ask the right questions. (Works best with a Story)
 ```bash
-> aijira ticket:ask "SPRY-1262"
+> aijira ticket:ask "<TICKET-NR>"
 ```
 
 ![2023-06-21_3.png](assets/2023-06-21_3.png)
 
 ### Use OpenAI to get an estimation in hours for a specific task.
 ```bash
-> aijira ticket:estimate "SPRY-1899"
+> aijira ticket:estimate "<TICKET-NR>"
 ```
 
 ![2023-06-21_4.png](assets/2023-06-21_4.png)
 
 ### Use OpenAI to improve ticket quality.
 ```bash
-> aijira ticket:validate "SPRY-661"
+> aijira ticket:validate "<TICKET-NR>"
 ```
 
 ![2023-06-21_5.png](assets/2023-06-21_5.png)
 
 ### Use OpenAI to generate your release notes to a given sprint. Its automatically collecting all merge requests.
 ```bash
-> aijira sprint:release-notes "Spryker Sprint 20"
+> aijira sprint:release-notes "<SPRINT-NAME>"
 ```
 
 ![2023-06-21_20-59.png](assets/2023-06-21_20-59.png)
 
 ### Use OpenAI to generate testcases that allow manual check if ticket requirements are implemented correctly.
 ```bash
-> aijira ticket:test-cases "Spryker Sprint 20"
+> aijira ticket:test-cases "<SPRINT-NAME>"
 ```
 
 ![2023-06-22_11.png](assets/2023-06-22_11.png)
