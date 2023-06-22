@@ -12,6 +12,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 $application = new Application('OpenAI JIRA Tools', '1.0.0');
 
@@ -25,10 +26,12 @@ $application->add(new class('ticket:validate') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = 'aiticketvalidator "'.$input->getArgument('ticket-no').'"';
-        exec($command, $outputBuffer);
-        array_map([$output, 'writeln'], $outputBuffer);
+        $command = ['./aiticketvalidator', $input->getArgument('ticket-no')];
+        $process = new Process($command);
+        $process->setTty(true);
+        $process->run();
 
+        $output->write($process->getOutput());
         return Command::SUCCESS;
     }
 });
@@ -43,10 +46,12 @@ $application->add(new class('ticket:score') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = 'aiticketscorer "'.$input->getArgument('ticket-no').'"';
-        exec($command, $outputBuffer);
-        array_map([$output, 'writeln'], $outputBuffer);
+        $command = ['./aiticketscorer', $input->getArgument('ticket-no')];
+        $process = new Process($command);
+        $process->setTty(true);
+        $process->run();
 
+        $output->write($process->getOutput());
         return Command::SUCCESS;
     }
 });
@@ -61,10 +66,12 @@ $application->add(new class('ticket:test-cases') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = 'aitickettestcases "'.$input->getArgument('ticket-no').'"';
-        exec($command, $outputBuffer);
-        array_map([$output, 'writeln'], $outputBuffer);
+        $command = ['./aitickettestcases', $input->getArgument('ticket-no')];
+        $process = new Process($command);
+        $process->setTty(true);
+        $process->run();
 
+        $output->write($process->getOutput());
         return Command::SUCCESS;
     }
 });
@@ -79,10 +86,12 @@ $application->add(new class('ticket:estimate') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = 'aiticketestimate "'.$input->getArgument('ticket-no').'"';
-        exec($command, $outputBuffer);
-        array_map([$output, 'writeln'], $outputBuffer);
+        $command = ['./aiticketestimate', $input->getArgument('ticket-no')];
+        $process = new Process($command);
+        $process->setTty(true);
+        $process->run();
 
+        $output->write($process->getOutput());
         return Command::SUCCESS;
     }
 });
@@ -97,10 +106,12 @@ $application->add(new class('ticket:ask') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = 'aiticketinterview "'.$input->getArgument('ticket-no').'"';
-        exec($command, $outputBuffer);
-        array_map([$output, 'writeln'], $outputBuffer);
+        $command = ['./aiticketinterview', $input->getArgument('ticket-no')];
+        $process = new Process($command);
+        $process->setTty(true);
+        $process->run();
 
+        $output->write($process->getOutput());
         return Command::SUCCESS;
     }
 });
@@ -115,10 +126,12 @@ $application->add(new class('ticket:test-cases') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = 'aitickettestcases "'.$input->getArgument('ticket-no').'"';
-        exec($command, $outputBuffer);
-        array_map([$output, 'writeln'], $outputBuffer);
+        $command = ['./aitickettestcases', $input->getArgument('ticket-no')];
+        $process = new Process($command);
+        $process->setTty(true);
+        $process->run();
 
+        $output->write($process->getOutput());
         return Command::SUCCESS;
     }
 });
@@ -133,10 +146,12 @@ $application->add(new class('sprint:review') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = 'aisprintreview "'.$input->getArgument('sprint-name').'"';
-        exec($command, $outputBuffer);
-        array_map([$output, 'writeln'], $outputBuffer);
+        $command = ['./aisprintreview', $input->getArgument('sprint-name')];
+        $process = new Process($command);
+        $process->setTty(true);
+        $process->run();
 
+        $output->write($process->getOutput());
         return Command::SUCCESS;
     }
 });
@@ -151,10 +166,12 @@ $application->add(new class('sprint:goals') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = 'aisprintgoals "'.$input->getArgument('sprint-name').'"';
-        exec($command, $outputBuffer);
-        array_map([$output, 'writeln'], $outputBuffer);
+        $command = ['./aisprintgoals', $input->getArgument('sprint-name')];
+        $process = new Process($command);
+        $process->setTty(true);
+        $process->run();
 
+        $output->write($process->getOutput());
         return Command::SUCCESS;
     }
 });
@@ -170,10 +187,12 @@ $application->add(new class('sprint:release-notes') extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = 'aireleasenotes "'.$input->getArgument('sprint-name').'"';
-        exec($command, $outputBuffer);
-        array_map([$output, 'writeln'], $outputBuffer);
+        $command = ['./aireleasenotes', $input->getArgument('sprint-name')];
+        $process = new Process($command);
+        $process->setTty(true);
+        $process->run();
 
+        $output->write($process->getOutput());
         return Command::SUCCESS;
     }
 });

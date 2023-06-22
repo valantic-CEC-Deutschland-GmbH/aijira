@@ -26,7 +26,8 @@
         "guzzlehttp/guzzle": "^7.7",
         "ext-curl": "*",
         "symfony/console": "^6.3",
-        "jfcherng/php-diff": "^6.15"
+        "jfcherng/php-diff": "^6.15",
+        "symfony/process": "^6.3"
     },
     "autoload": {
         "psr-4": {
