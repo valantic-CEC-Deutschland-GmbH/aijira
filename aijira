@@ -105,6 +105,24 @@ $application->add(new class('ticket:ask') extends Command {
     }
 });
 
+$application->add(new class('ticket:test-cases') extends Command {
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+        $this->setDescription('Use OpenAI to generate testcases that allow manual check if ticket requirements are implemented correctly.');
+        $this->addArgument('ticket-no', InputArgument::REQUIRED, 'JIRA Ticket Number');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $command = 'aitickettestcases "'.$input->getArgument('ticket-no').'"';
+        exec($command, $outputBuffer);
+        array_map([$output, 'writeln'], $outputBuffer);
+
+        return Command::SUCCESS;
+    }
+});
+
 $application->add(new class('sprint:review') extends Command {
     public function __construct(string $name = null)
     {

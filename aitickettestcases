@@ -9,9 +9,9 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 
 $ticketNumber = $_SERVER['argv'][1] ?? null;
 if ($ticketNumber === null) {
-    echo "Please enter a valid ticket number. \nExample:\n> aiticketvalidator \"SPRY-1234\"";
+    echo "Please enter a valid ticket number. \nExample:\n> aiticketinterview \"SPRY-1234\"";
     exit(0);
 }
 
-$ticketValidator = new AiJira\TicketTestCaseCreator\TicketTestCaseCreator();
-echo $ticketValidator->createTicketTestCases($ticketNumber);
+$ticketInterview = new \AiJira\TicketTestcases\TicketTestcases();
+echo $ticketInterview->getTicketTestcases($ticketNumber);

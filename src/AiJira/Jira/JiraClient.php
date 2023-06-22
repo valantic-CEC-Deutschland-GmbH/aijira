@@ -8,16 +8,18 @@ use GuzzleHttp\Client;
 
 class JiraClient
 {
+    private const JIRA_SEARCH_ENDPOINT = '/rest/api/3/search';
+
     public function getTicketsBySprintName(string $sprintName): array
     {
         $endpoint = sprintf(
             '%s%s',
             getenv('AI_JIRA_URL'),
-            '/rest/api/3/search'
+            self::JIRA_SEARCH_ENDPOINT
         );
 
         $data = [
-            'jql' => sprintf('project = "%s" and Sprint = "%s" and (Sprint in futureSprints() or Sprint in openSprints()) and type not in(Epic) order by created DESC', getenv('AI_JIRA_PROJECT'), $sprintName),
+            'jql' => sprintf('project = "%s" and Sprint = "%s" and (Sprint in futureSprints() or Sprint in openSprints()) and type not in (Epic) order by created DESC', getenv('AI_JIRA_PROJECT'), $sprintName),
             'fields' => [
                 'summary',
                 'description',
@@ -30,12 +32,31 @@ class JiraClient
         return $this->postApi($endpoint, $data);
     }
 
+    public function getTasksBySprintName(string $sprintName): array
+    {
+        $endpoint = sprintf(
+            '%s%s',
+            getenv('AI_JIRA_URL'),
+            self::JIRA_SEARCH_ENDPOINT
+        );
+
+        $data = [
+            'jql' => sprintf('project = "%s" and Sprint = "%s" and (Sprint in futureSprints() or Sprint in openSprints()) and type not in (Epic, Story) order by created DESC', getenv('AI_JIRA_PROJECT'), $sprintName),
+            'fields' => [
+                'summary',
+                'timetracking'
+            ],
+        ];
+
+        return $this->postApi($endpoint, $data);
+    }
+
     public function getEstimatedTickets(): array
     {
         $endpoint = sprintf(
             '%s%s',
             getenv('AI_JIRA_URL'),
-            '/rest/api/3/search'
+            self::JIRA_SEARCH_ENDPOINT
         );
 
         $data = [
