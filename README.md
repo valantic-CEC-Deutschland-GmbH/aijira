@@ -20,18 +20,11 @@ The following env parameters need to be configured, depending on the CLI command
 - Retrieve your [Jira API Key](https://id.atlassian.com/manage-profile/security/api-tokens)
 - Retrieve your [Gitlab Access Token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
 
-### General Environment Variables
-- OPENAI_KEY
-## `aisprintgoals, aiticketvalidator, aiticketestimate, aiticketinterview`
-- AI_JIRA_EMAIL (i.e. schoenfeld@nexus-netsoft.com)
-- AI_JIRA_API_TOKEN (i.e. ATATT3xF...)
-- AI_JIRA_URL (i.e. https://nexus-netsoft.atlassian.net/)
-- AI_JIRA_PROJECT (i.e. SPRY)
-- AI_JIRA_BOARD_ID (i.e. 10)
-## `aisprintreview, aireleasenotes`
-- AI_GITLAB_URL (selfhosted i.e. https://gitlab.nxs360.com/, SaaS https://gitlab.example.com/)
-- AI_GITLAB_TOKEN (i.e. 9s6h...)
-- AI_GITLAB_PROJECT_IDS (i.e. 476,735)
+| Scope        |                                                                                                     Variable                                                                                                      |
+| ------------- |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| global      |                                                                                                    OPENAI_KEY                                                                                                     |
+| aisprintgoals<br/>aiticketvalidator<br/>aiticketestimate<br/>aiticketinterview      |   AI_JIRA_EMAIL (i.e. schoenfeld@nexus-netsoft.com)<br/>AI_JIRA_API_TOKEN (i.e. ATATT3xF...)<br/>AI_JIRA_URL (i.e. https://nexus-netsoft.atlassian.net/)<br/>AI_JIRA_PROJECT (i.e. SPRY)<br/>AI_JIRA_BOARD_ID (i.e. 10)|
+| aisprintreview<br/>aireleasenotes |AI_GITLAB_URL (selfhosted i.e. https://gitlab.nxs360.com/, SaaS https://gitlab.example.com/)<br/>AI_GITLAB_TOKEN (i.e. 9s6h...)<br/>AI_GITLAB_PROJECT_IDS (i.e. 476,735)|
 
 ## Examples
 
