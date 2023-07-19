@@ -10,7 +10,6 @@ Automization for regular project related tasks - no developer likes.
 
 ## Setup
 ```
-composer global config repositories.gitlab.nxs360.com/460 '{"type": "composer", "url": "https://gitlab.nxs360.com/api/v4/group/460/-/packages/composer/packages.json"}'
 composer global require valantic-cec/aijira
 ```
 
