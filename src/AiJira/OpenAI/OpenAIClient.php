@@ -8,7 +8,7 @@ use GuzzleHttp\Client;
 
 class OpenAIClient
 {
-    public function getGeneratedSprintGoals(array $ticketData, array $labels = []): string
+    public function getGeneratedSprintGoals(array $ticketData, array $labels = [], ?string $overwritePrompt): string
     {
         $endpoint = 'https://api.openai.com/v1/chat/completions';
         $goalsPerCategory = 3;
@@ -18,6 +18,10 @@ class OpenAIClient
             $goalsPerCategory,
             $labels ? ' for each category' : ''
         );
+
+        if ($overwritePrompt) {
+            $prompt = $overwritePrompt;
+        }
 
         $data = [
             'temperature' => 0,

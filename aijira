@@ -162,11 +162,12 @@ $application->add(new class('sprint:goals') extends Command {
         parent::__construct($name);
         $this->setDescription('Use OpenAI to generate your sprint goals for a planned or existing sprint.');
         $this->addArgument('sprint-name', InputArgument::REQUIRED, 'JIRA Sprint Name');
+        $this->addArgument('overwrite-prompt', InputArgument::OPTIONAL, 'Overwrite Prompt');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = ['aisprintgoals', $input->getArgument('sprint-name')];
+        $command = ['aisprintgoals', $input->getArgument('sprint-name'), $input->getArgument('overwrite-prompt')];
         $process = new Process($command);
         $process->setTty(true);
         $process->run();

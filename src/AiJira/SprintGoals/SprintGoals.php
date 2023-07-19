@@ -18,12 +18,17 @@ class SprintGoals
         $this->mapper = new Mapper($this->jiraFormatter);
     }
 
-    public function generateSprintGoals(string $sprintName): string
+    public function generateSprintGoals(string $sprintName, ?string $overwritePrompt): string
     {
         $ticketData = $this->jiraClient->getTicketsBySprintName($sprintName);
         [$tasks, $stories] = $this->mapper->splitTicketsByType($ticketData);
         $labels = $this->jiraFormatter->extractLabels($tasks);
 
-        return $this->openaiClient->getGeneratedSprintGoals($tasks, $labels) . "\n\nOverall:\n" . $this->openaiClient->getGeneratedSprintGoals($stories);
+        if ($overwritePrompt)
+        {
+            return $this->openaiClient->getGeneratedSprintGoals($stories, [], $overwritePrompt);
+        } else {
+            return $this->openaiClient->getGeneratedSprintGoals($tasks, $labels, null) . "\n\nOverall:\n" . $this->openaiClient->getGeneratedSprintGoals($stories, [], null);
+        }
     }
 }

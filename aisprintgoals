@@ -13,5 +13,7 @@ if ($sprintName === null) {
     exit(0);
 }
 
+$overwritePrompt = $_SERVER['argv'][2] ?? null;
+
 $sprintGoals = new \AiJira\SprintGoals\SprintGoals();
-echo $sprintGoals->generateSprintGoals($sprintName);
+echo $sprintGoals->generateSprintGoals($sprintName, $overwritePrompt);
