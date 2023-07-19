@@ -9,16 +9,16 @@ Automization for regular project related tasks - no developer likes.
 ```
 
 ## Setup
-```
-composer global require valantic-cec/aijira
-```
+ - install PHP
+ - `composer global require valantic-cec/aijira`
+ - add environment variables mentioned below
+
+## Configuration
+The following env parameters need to be configured, depending on the CLI commands you like to use (just configure them all):
 
 - Retrieve your [OpenAI API Key](https://platform.openai.com/account/api-keys)
 - Retrieve your [Jira API Key](https://id.atlassian.com/manage-profile/security/api-tokens)
-- Retrieve your [Gitlab Access Token](https://gitlab.nxs360.com/-/profile/personal_access_tokens)
-
-## Configuration
-The following env parameters need to be configured, depending on CLI commands you like to use (just configure them all):
+- Retrieve your [Gitlab Access Token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
 
 ### General Environment Variables
 - OPENAI_KEY
@@ -29,7 +29,7 @@ The following env parameters need to be configured, depending on CLI commands yo
 - AI_JIRA_PROJECT (i.e. SPRY)
 - AI_JIRA_BOARD_ID (i.e. 10)
 ## `aisprintreview, aireleasenotes`
-- AI_GITLAB_URL (i.e. https://gitlab.nxs360.com/)
+- AI_GITLAB_URL (selfhosted i.e. https://gitlab.nxs360.com/, SaaS https://gitlab.example.com/)
 - AI_GITLAB_TOKEN (i.e. 9s6h...)
 - AI_GITLAB_PROJECT_IDS (i.e. 476,735)
 
