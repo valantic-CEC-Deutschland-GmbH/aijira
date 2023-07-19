@@ -25,7 +25,7 @@ class SprintGoals
         $labels = $this->jiraFormatter->extractLabels($tasks);
 
         if ($overwritePrompt) {
-            return $this->openaiClient->getGeneratedSprintGoals($stories, [], $overwritePrompt);
+            return $this->openaiClient->getGeneratedSprintGoals([$tasks, $stories], [], $overwritePrompt);
         } else {
             return $this->openaiClient->getGeneratedSprintGoals($tasks, $labels, null) . "\n\nOverall:\n" . $this->openaiClient->getGeneratedSprintGoals($stories, [], null);
         }
