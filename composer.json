@@ -1,5 +1,5 @@
 {
-    "name": "valantic/aijira",
+    "name": "valantic-cec/aijira",
     "description": "Use OpenAI to generate sprint goals, a sprint review agenda or jira ticket field descriptions.",
     "type": "library",
     "license": "MIT",
