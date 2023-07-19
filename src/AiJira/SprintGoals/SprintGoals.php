@@ -24,8 +24,7 @@ class SprintGoals
         [$tasks, $stories] = $this->mapper->splitTicketsByType($ticketData);
         $labels = $this->jiraFormatter->extractLabels($tasks);
 
-        if ($overwritePrompt)
-        {
+        if ($overwritePrompt) {
             return $this->openaiClient->getGeneratedSprintGoals($stories, [], $overwritePrompt);
         } else {
             return $this->openaiClient->getGeneratedSprintGoals($tasks, $labels, null) . "\n\nOverall:\n" . $this->openaiClient->getGeneratedSprintGoals($stories, [], null);
