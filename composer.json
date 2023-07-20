@@ -12,7 +12,8 @@
       "aiticketinterview",
       "aiticketvalidator",
       "aiticketscorer",
-      "aitickettestcases"
+      "aitickettestcases",
+      "aiticketsprintgoals"
     ],
     "authors": [
         {

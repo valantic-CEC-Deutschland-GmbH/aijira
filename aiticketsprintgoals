@@ -1,0 +1,19 @@
+#!/usr/bin/php
+<?php
+
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require __DIR__ . '/vendor/autoload.php';
+} else {
+    require_once(__DIR__ . '/../../autoload.php');
+}
+
+$listOfTickets = $_SERVER['argv'][1] ?? null;
+if ($listOfTickets === null) {
+    echo "Please enter a valid list of tickets. \nExample:\n> aiticketsprintgoals \"SPRY-1234,SPRY-1000,SPRY-2000\"";
+    exit(0);
+}
+
+$overwritePrompt = $_SERVER['argv'][2] ?? null;
+
+$sprintGoals = new \AiJira\SprintGoals\SprintGoals();
+echo $sprintGoals->generateSprintGoalsByTicket($listOfTickets, $overwritePrompt);

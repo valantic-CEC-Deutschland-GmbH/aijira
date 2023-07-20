@@ -30,4 +30,17 @@ class SprintGoals
             return $this->openaiClient->getGeneratedSprintGoals($tasks, $labels, null) . "\n\nOverall:\n" . $this->openaiClient->getGeneratedSprintGoals($stories, [], null);
         }
     }
+
+    public function generateSprintGoalsByTicket(string $ticket, ?string $overwritePrompt): string
+    {
+        $ticketData = $this->jiraClient->getTicketsByTicketList($ticket);
+        [$tasks, $stories] = $this->mapper->splitTicketsByType($ticketData);
+        $labels = $this->jiraFormatter->extractLabels($tasks);
+
+        if ($overwritePrompt) {
+            return $this->openaiClient->getGeneratedSprintGoals([$tasks, $stories], [], $overwritePrompt);
+        } else {
+            return $this->openaiClient->getGeneratedSprintGoals($tasks, $labels, null) . "\n\nOverall:\n" . $this->openaiClient->getGeneratedSprintGoals($stories, [], null);
+        }
+    }
 }

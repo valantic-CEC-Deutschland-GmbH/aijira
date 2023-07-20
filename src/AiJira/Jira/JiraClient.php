@@ -32,6 +32,28 @@ class JiraClient
         return $this->postApi($endpoint, $data);
     }
 
+    public function getTicketsByTicketList(string $ticketList): array
+    {
+        $endpoint = sprintf(
+            '%s%s',
+            getenv('AI_JIRA_URL'),
+            self::JIRA_SEARCH_ENDPOINT
+        );
+
+        $data = [
+            'jql' => sprintf('project = "%s" and key IN (%s) and type not in (Epic) order by created DESC', getenv('AI_JIRA_PROJECT'), $ticketList),
+            'fields' => [
+                'summary',
+                'description',
+                'labels',
+                'issuetype',
+                'timetracking'
+            ],
+        ];
+
+        return $this->postApi($endpoint, $data);
+    }
+
     public function getTasksBySprintName(string $sprintName): array
     {
         $endpoint = sprintf(
