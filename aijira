@@ -177,6 +177,26 @@ $application->add(new class('sprint:goals') extends Command {
     }
 });
 
+$application->add(new class('ticket:sprintgoals') extends Command {
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+        $this->setDescription('Use OpenAI to generate your sprint goals for a planned or existing sprint using a list of tickets.');
+        $this->addArgument('list-of-tickets', InputArgument::REQUIRED, 'List of JIRA Tickets');
+        $this->addArgument('overwrite-prompt', InputArgument::OPTIONAL, 'Overwrite Prompt');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $command = ['aiticketsprintgoals', $input->getArgument('list-of-tickets'), $input->getArgument('overwrite-prompt')];
+        $process = new Process($command);
+        $process->setTty(true);
+        $process->run();
+
+        $output->write($process->getOutput());
+        return Command::SUCCESS;
+    }
+});
 
 $application->add(new class('sprint:release-notes') extends Command {
     public function __construct(string $name = null)

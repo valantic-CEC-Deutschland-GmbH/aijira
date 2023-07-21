@@ -31,9 +31,11 @@ The following env parameters need to be configured, depending on the CLI command
 ### Use OpenAI to generate your sprint goals for a planned or existing sprint.
 ```bash
 > aijira sprint:goals "<SPRINT-NAME>"
+> aijira ticket:sprintgoals "<Ticket1>,<Ticket2>,<Ticket3>"
 ```
 
 ![2023-06-21_1.png](assets/2023-06-21_1.png)
+![2023-06-21_5.png](assets%2F2023-06-21_5.png)
 
 ### Use OpenAI to generate a sprint review agenda.
 ```bash
