@@ -10,7 +10,7 @@ class Mapper
     {
         $tasks = [];
         foreach ($ticketData['issues'] as $ticket) {
-            $tasks[$ticket['key']] = ['title' => $ticket['fields']['summary'], 'estimation' => $ticket['fields']['timetracking']['originalEstimate']];
+            $tasks[$ticket['key']] = ['title' => $ticket['fields']['summary'], 'estimation' => $ticket['fields']['timetracking']['originalEstimate'] ?? 0];
         }
 
         return $tasks;
