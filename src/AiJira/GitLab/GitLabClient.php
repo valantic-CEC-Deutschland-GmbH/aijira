@@ -10,10 +10,17 @@ class GitLabClient
 {
     public function getMergeRequestsForJiraSprint(array $jiraSprint): array
     {
-        $startDate = new \DateTimeImmutable($jiraSprint['startDate']);
-        $endDate = new \DateTimeImmutable($jiraSprint['endDate']);
-
         $mergeRequests = [];
+
+        $startDate = $jiraSprint['startDate'] ?? null;
+        $endDate = $jiraSprint['endDate'] ?? null;
+
+        if (!$startDate || !$endDate) {
+            return $mergeRequests;
+        }
+
+        $startDate = new \DateTimeImmutable($startDate);
+        $endDate = new \DateTimeImmutable($endDate);
         foreach (explode(',', getenv('AI_GITLAB_PROJECT_IDS')) as $gitlabProjectID) {
             $mergeRequests = array_merge($mergeRequests, $this->getMergeRequestsByDateRange($gitlabProjectID, $startDate, $endDate));
         }
